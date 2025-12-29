@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load environment variables
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise');
 const session = require('express-session');
@@ -9,30 +9,23 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-// Gunakan /tmp untuk vercel karena filesystem read-only
 const upload = multer({ dest: '/tmp' }); 
 
-// --- 1. KONFIGURASI DATABASE (DARI ENV) ---
+// --- 1. KONFIGURASI DATABASE ---
 const dbOptions = {
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'spk_saw_final',
     port: process.env.DB_PORT || 3306,
-    // HAPUS baris SSL, atau set ke false jika library memaksa
+    // HAPUS ssl: { rejectUnauthorized: false } agar cPanel tidak menolak koneksi
     ssl: false 
 };
 
-// Handle SSL issue for local vs remote
-if (process.env.DB_HOST === 'localhost') {
-    delete dbOptions.ssl;
-}
-
-// Session Store (Simpan Login di Database cPanel agar support Serverless)
 const sessionStore = new MySQLStore(dbOptions);
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')); // Explicit path for Vercel
+app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
@@ -41,23 +34,30 @@ app.use(session({
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 Hari
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
-// Helper DB Connection Pool
 const pool = mysql.createPool(dbOptions);
 
 async function getDB() {
     return await pool.getConnection();
 }
 
-// Global Middleware
 app.use(async (req, res, next) => {
-    // Di Vercel/Serverless, kita gunakan Pool, tidak perlu connect/end manual tiap request
-    // untuk performa yang lebih baik.
     req.dbPool = pool; 
     next();
 });
+
+// --- HELPER QUERY (Wrapper) ---
+const query = async (sql, params = []) => {
+    const conn = await getDB();
+    try {
+        const [results] = await conn.execute(sql, params);
+        return results; // Mengembalikan ARRAY baris data
+    } finally {
+        conn.release();
+    }
+};
 
 // --- ROUTES AUTH ---
 app.get('/', (req, res) => {
@@ -66,10 +66,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    let conn;
     try {
-        conn = await getDB();
-        const [rows] = await conn.execute("SELECT * FROM users WHERE username=?", [req.body.username]);
+        const rows = await query("SELECT * FROM users WHERE username=?", [req.body.username]);
         if (rows.length > 0 && rows[0].password === req.body.password) {
             req.session.user = rows[0];
             req.session.save(() => {
@@ -79,9 +77,7 @@ app.post('/login', async (req, res) => {
             res.render('index', { page: 'login', error: 'Username atau Password Salah' });
         }
     } catch(e) {
-        res.send("DB Error: " + e.message);
-    } finally {
-        if(conn) conn.release();
+        res.render('index', { page: 'login', error: 'Database Error: ' + e.message });
     }
 });
 
@@ -96,24 +92,18 @@ const auth = (req, res, next) => {
     next();
 };
 
-// --- ROUTES UTAMA ---
-// Wrapper function untuk query database sederhana
-const query = async (sql, params = []) => {
-    const conn = await getDB();
-    try {
-        const [results] = await conn.execute(sql, params);
-        return results;
-    } finally {
-        conn.release();
-    }
-};
-
+// --- ROUTES UTAMA (FIXED DASHBOARD) ---
 app.get('/dashboard', auth, async (req, res) => {
     try {
-        const [k] = await query("SELECT count(*) as c FROM karyawan");
-        const [c] = await query("SELECT count(*) as c FROM kriteria");
+        // PERBAIKAN DI SINI: Hapus tanda [] agar variabel tetap menjadi Array
+        const k = await query("SELECT count(*) as c FROM karyawan");
+        const c = await query("SELECT count(*) as c FROM kriteria");
+        
+        // Sekarang k[0] dan c[0] aman diakses
         res.render('index', { page: 'dashboard', user: req.session.user, c_k: k[0].c, c_c: c[0].c });
-    } catch (e) { res.send(e.message); }
+    } catch (e) { 
+        res.send("Dashboard Error: " + e.message); 
+    }
 });
 
 app.get('/kriteria', auth, async (req, res) => {
@@ -194,7 +184,6 @@ app.post('/import_csv', auth, upload.single('file_csv'), async (req, res) => {
                 }
             }
         } catch(e) { console.log(e); } 
-        // No unlink needed in Vercel /tmp usually, but good practice
     }
     res.redirect('/karyawan');
 });
@@ -258,11 +247,8 @@ app.all('/analisis', auth, async (req, res) => {
     res.render('index', { page: 'analisis', user: req.session.user, kriteria, hasil, bobot_active: bobot });
 });
 
-// Export app for Vercel
 module.exports = app;
 
-// Local dev fallback
 if (require.main === module) {
     app.listen(3000, () => console.log('Server running locally on port 3000'));
-
 }
