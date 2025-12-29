@@ -65,61 +65,26 @@
         .btn-modern { background: var(--primary); color: #fff; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 600; transition: 0.2s; font-size: 0.9rem; }
         .btn-modern:hover { background: var(--primary-dark); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
         
-        /* --- DATATABLES STYLING --- */
+        /* DATATABLES */
         .dataTables_wrapper { padding: 0; }
-        .dataTables_wrapper .row:first-child {
-            padding: 20px 25px; margin: 0; border-bottom: 1px solid #f1f5f9; align-items: center;
-        }
-        .dataTables_wrapper .row:last-child {
-            padding: 20px 25px; margin: 0; border-top: 1px solid #f1f5f9;
-        }
+        .dataTables_wrapper .row:first-child { padding: 20px 25px; margin: 0; border-bottom: 1px solid #f1f5f9; align-items: center; }
+        .dataTables_wrapper .row:last-child { padding: 20px 25px; margin: 0; border-top: 1px solid #f1f5f9; }
         .dataTables_filter label, .dataTables_length label { font-weight: 600; color: var(--gray); font-size: 0.9rem; }
-        
-        .dataTables_filter input {
-            border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; outline: none; transition: 0.2s; margin-left: 10px;
-        }
-        
-        /* FIX DROPDOWN & ARROWS */
-        .dataTables_length select {
-            border: 1px solid #e2e8f0; 
-            border-radius: 8px; 
-            padding: 6px 24px 6px 12px !important; 
-            outline: none; 
-            transition: 0.2s; 
-            margin: 0 10px;
-            cursor: pointer;
-            background-color: #fff;
-            min-width: 65px;
-            background-image: none !important; /* Hapus panah custom DataTables */
-            -webkit-appearance: auto !important; /* Pakai panah browser */
-            -moz-appearance: auto !important;
-            appearance: auto !important;
-        }
-
-        .dataTables_filter input:focus, .dataTables_length select:focus {
-            border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light);
-        }
-        /* -------------------------- */
+        .dataTables_filter input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; outline: none; transition: 0.2s; margin-left: 10px; }
+        .dataTables_length select { border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 24px 6px 12px !important; outline: none; transition: 0.2s; margin: 0 10px; cursor: pointer; background-color: #fff; min-width: 65px; background-image: none !important; -webkit-appearance: auto !important; -moz-appearance: auto !important; appearance: auto !important; }
+        .dataTables_filter input:focus, .dataTables_length select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
         /* TABLE */
         .table-custom { margin-bottom: 0 !important; width: 100% !important; border-collapse: separate; border-spacing: 0; }
-        .table-custom thead th { 
-            background: #f8fafc; color: var(--gray); text-transform: uppercase; 
-            font-size: 0.75rem; letter-spacing: 0.5px; padding: 18px 20px; border-bottom: 2px solid #e2e8f0; font-weight: 700;
-        }
-        .table-custom tbody td { 
-            padding: 18px 20px; vertical-align: middle; font-size: 0.95rem; border-bottom: 1px solid #f1f5f9; color: var(--dark);
-        }
+        .table-custom thead th { background: #f8fafc; color: var(--gray); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding: 18px 20px; border-bottom: 2px solid #e2e8f0; font-weight: 700; white-space: nowrap; }
+        .table-custom tbody td { padding: 18px 20px; vertical-align: middle; font-size: 0.95rem; border-bottom: 1px solid #f1f5f9; color: var(--dark); }
         .table-custom tbody tr:last-child td { border-bottom: none; }
         .table-custom tbody tr:hover { background-color: #f8fafc; }
-
         .w-tight { width: 1%; white-space: nowrap; text-align: center; }
         .w-small { width: 100px; text-align: center; }
 
         /* FIX CHECKBOX SORTING */
-        table.dataTable thead th.no-sort { 
-            background-image: none !important; cursor: default !important; pointer-events: none; padding-right: 20px !important;
-        }
+        table.dataTable thead th.no-sort { background-image: none !important; cursor: default !important; pointer-events: none; padding-right: 20px !important; }
         table.dataTable thead th.no-sort input { pointer-events: auto; cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary); }
         table.dataTable thead th.no-sort::before, table.dataTable thead th.no-sort::after { display: none !important; content: "" !important; }
 
@@ -128,7 +93,6 @@
         .rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
         .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); }
-        
         .sticky-col { position: sticky; top: 30px; z-index: 50; }
         .login-bg { background: linear-gradient(135deg, #ecfdf5, #fff); height: 100vh; display: flex; align-items: center; justify-content: center; }
 
@@ -160,22 +124,18 @@
 <div class="wrapper">
     <nav id="sidebar">
         <div class="sidebar-brand"><i class="fas fa-user-clock text-success"></i> SPK KEHADIRAN</div>
-        
         <div class="nav-section">
             <a href="/dashboard" class="nav-link <%= page=='dashboard'?'active':'' %>"><i class="fas fa-grid-2"></i> Dashboard</a>
         </div>
-
         <div class="nav-title">Master Data</div>
         <div class="nav-section">
             <a href="/kriteria" class="nav-link <%= page=='kriteria'?'active':'' %>"><i class="fas fa-sliders"></i> Data Kriteria</a>
             <a href="/karyawan" class="nav-link <%= page=='karyawan'?'active':'' %>"><i class="fas fa-users"></i> Data Karyawan</a>
         </div>
-
         <div class="nav-title">Analisis Keputusan</div>
         <div class="nav-section">
             <a href="/analisis" class="nav-link <%= page=='analisis'?'active':'' %>"><i class="fas fa-clipboard-check"></i> Hasil Penilaian</a>
         </div>
-
         <div class="nav-section mt-5 border-top pt-4">
             <a href="/logout" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
@@ -186,11 +146,7 @@
             <div class="d-flex align-items-center gap-3">
                 <button class="btn btn-light d-lg-none border" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="fas fa-bars"></i></button>
                 <div>
-                    <h3 class="fw-bold m-0">
-                        <%= page=='dashboard' ? 'Dashboard Utama' : 
-                           (page=='kriteria' ? 'Master Kriteria' : 
-                           (page=='karyawan' ? 'Data Karyawan' : 'Penilaian Kehadiran')) %>
-                    </h3>
+                    <h3 class="fw-bold m-0"><%= page=='dashboard'?'Dashboard Utama':(page=='kriteria'?'Master Kriteria':(page=='karyawan'?'Data Karyawan':'Penilaian Kehadiran')) %></h3>
                     <p class="text-muted m-0 small">Sistem Penilaian Kehadiran Karyawan</p>
                 </div>
             </div>
@@ -237,25 +193,27 @@
                 </div>
                 <div class="card-body-modern">
                     <form id="formKriteria" method="POST" action="/del_kriteria">
-                        <table class="table table-custom table-hover mb-0" id="tk">
-                            <thead><tr>
-                                <th class="w-tight no-sort text-center"><input class="form-check-input" type="checkbox" onchange="toggleAll(this,'ck')"></th>
-                                <th class="w-tight">Kode</th><th>Nama Kriteria</th><th class="w-tight">Atribut</th><th class="w-tight text-center">Bobot</th><th class="text-end w-tight no-sort">Aksi</th>
-                            </tr></thead>
-                            <tbody><% kriteria.forEach(r => { %>
-                                <tr>
-                                    <td class="text-center"><input class="form-check-input ck" type="checkbox" name="ids[]" value="<%= r.id %>" onchange="chk('bdk','ck')"></td>
-                                    <td><span class="badge bg-light text-dark border"><%= r.kode %></span></td>
-                                    <td class="fw-bold text-dark"><%= r.nama %></td>
-                                    <td><span class="badge <%= r.atribut=='benefit'?'bg-success':'bg-danger'%> bg-opacity-75"><%= r.atribut.toUpperCase() %></span></td>
-                                    <td class="text-center"><%= r.bobot %></td>
-                                    <td class="text-end">
-                                        <button type="button" onclick='modKriteria(<%- JSON.stringify(r) %>)' class="btn btn-sm btn-light border text-primary"><i class="fas fa-pen"></i></button>
-                                        <a href="/del_kriteria?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus?')"><i class="fas fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            <% }) %></tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-custom table-hover mb-0" id="tk">
+                                <thead><tr>
+                                    <th class="w-tight no-sort text-center"><input class="form-check-input" type="checkbox" onchange="toggleAll(this,'ck')"></th>
+                                    <th class="w-tight">Kode</th><th>Nama Kriteria</th><th class="w-tight">Atribut</th><th class="w-tight text-center">Bobot</th><th class="text-end w-tight no-sort">Aksi</th>
+                                </tr></thead>
+                                <tbody><% kriteria.forEach(r => { %>
+                                    <tr>
+                                        <td class="text-center"><input class="form-check-input ck" type="checkbox" name="ids[]" value="<%= r.id %>" onchange="chk('bdk','ck')"></td>
+                                        <td><span class="badge bg-light text-dark border"><%= r.kode %></span></td>
+                                        <td class="fw-bold text-dark"><%= r.nama %></td>
+                                        <td><span class="badge <%= r.atribut=='benefit'?'bg-success':'bg-danger'%> bg-opacity-75"><%= r.atribut.toUpperCase() %></span></td>
+                                        <td class="text-center"><%= r.bobot %></td>
+                                        <td class="text-end">
+                                            <button type="button" onclick='modKriteria(<%- JSON.stringify(r) %>)' class="btn btn-sm btn-light border text-primary"><i class="fas fa-pen"></i></button>
+                                            <a href="/del_kriteria?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus?')"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                <% }) %></tbody>
+                            </table>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -266,7 +224,6 @@
                 <a href="/export_csv" class="btn btn-white border text-success fw-bold btn-sm shadow-sm"><i class="fas fa-download me-1"></i> Export CSV</a>
                 <button class="btn btn-modern btn-sm shadow-sm" onclick="modKaryawan()"><i class="fas fa-plus me-1"></i> Input Data</button>
             </div>
-            
             <div class="card-modern">
                 <div class="card-header-modern">
                     <div class="d-flex align-items-center gap-3"><span class="bg-warning text-white rounded p-2"><i class="fas fa-users"></i></span> Data Absensi Karyawan</div>
@@ -281,8 +238,7 @@
                                     <th>Nama Karyawan</th><th>Jabatan</th>
                                     <% kriteria.forEach(c=>{ %> 
                                         <th class="text-center w-small">
-                                            <%= c.kode %><br>
-                                            <span style="font-size:0.65rem; font-weight:normal; text-transform:none; color:#94a3b8"><%= c.nama %></span>
+                                            <%= c.kode %><br><span style="font-size:0.65rem; font-weight:normal; text-transform:none; color:#94a3b8"><%= c.nama %></span>
                                         </th> 
                                     <% }) %> 
                                     <th class="text-end w-tight no-sort">Aksi</th>
@@ -384,11 +340,10 @@
 <div class="modal fade" id="mimp"><div class="modal-dialog"><form method="POST" action="/import_csv" enctype="multipart/form-data" class="modal-content border-0 shadow"><div class="modal-header border-0"><h5 class="fw-bold">Import CSV</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info small">Format CSV: <b>Nama, Jabatan, Nilai_C1, Nilai_C2...</b></div><input type="file" name="file_csv" class="form-control" required></div><div class="modal-footer border-0"><button class="btn btn-modern w-100">Upload & Proses</button></div></form></div></div>
 
 <script>
-    // FINAL FIX: NO SORT ON CHECKBOX COLUMN
     $(document).ready(function(){ 
         const dtConfig = {
             language: { search: "Cari:", lengthMenu: "Tampil _MENU_", info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data" },
-            columnDefs: [ { orderable: false, targets: 0 } ] // Matikan fungsi sort di kolom index 0
+            columnDefs: [ { orderable: false, targets: 0 } ]
         };
         $('#tk').DataTable(dtConfig); 
         $('#tka').DataTable(dtConfig); 
@@ -397,12 +352,8 @@
     function modKriteria(d=null){ $('#kid').val(d?d.id:''); $('#kk').val(d?d.kode:''); $('#kn').val(d?d.nama:''); $('#ka').val(d?d.atribut:'benefit'); $('#kb').val(d?d.bobot:''); new bootstrap.Modal('#mk').show(); }
     function modKaryawan(d=null,v=null){ $('#karid').val(d?d.id:''); $('#karn').val(d?d.nama:''); $('#karj').val(d?d.jabatan:''); $('input[id^="val_"]').val(''); if(v) for(let[i,x] of Object.entries(v)) $('#val_'+i).val(x); new bootstrap.Modal('#mka').show(); }
     function modImport(){ new bootstrap.Modal('#mimp').show(); }
-    
-    // Checkbox Logic
     function toggleAll(src,cls){ $('.'+cls).prop('checked',src.checked); chk(cls=='ck'?'bdk':'bdka',cls); }
     function chk(btn,cls){ $('.'+cls+':checked').length?$('#'+btn).removeClass('d-none'):$('#'+btn).addClass('d-none'); }
-    
-    // Submit Bulk Delete
     function submitBulk(formId, actionUrl) {
         if(confirm('Yakin ingin menghapus data yang dipilih?')) {
             const form = document.getElementById(formId);
