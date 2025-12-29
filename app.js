@@ -19,7 +19,8 @@ const dbOptions = {
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'spk_saw_final',
     port: process.env.DB_PORT || 3306,
-    ssl: { rejectUnauthorized: false } // Penting untuk koneksi jarak jauh yang aman
+    // HAPUS baris SSL, atau set ke false jika library memaksa
+    ssl: false 
 };
 
 // Handle SSL issue for local vs remote
@@ -263,4 +264,5 @@ module.exports = app;
 // Local dev fallback
 if (require.main === module) {
     app.listen(3000, () => console.log('Server running locally on port 3000'));
+
 }
