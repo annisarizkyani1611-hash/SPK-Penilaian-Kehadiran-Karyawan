@@ -198,13 +198,11 @@
                             <table class="table table-custom table-hover mb-0" id="tk">
                                 <thead><tr>
                                     <th class="w-tight no-sort text-center"><input class="form-check-input" type="checkbox" onchange="toggleAll(this,'ck')"></th>
-                                    <th class="w-tight text-center">No</th>
                                     <th class="w-tight">Kode</th><th>Nama Kriteria</th><th class="w-tight">Atribut</th><th class="w-tight text-center">Bobot</th><th class="text-end w-tight no-sort">Aksi</th>
                                 </tr></thead>
-                                <tbody><% kriteria.forEach((r, i) => { %>
+                                <tbody><% kriteria.forEach(r => { %>
                                     <tr>
                                         <td class="text-center"><input class="form-check-input ck" type="checkbox" name="ids[]" value="<%= r.id %>" onchange="chk('bdk','ck')"></td>
-                                        <td class="text-center fw-bold"><%= i + 1 %></td>
                                         <td><span class="badge bg-light text-dark border"><%= r.kode %></span></td>
                                         <td class="fw-bold text-dark"><%= r.nama %></td>
                                         <td><span class="badge <%= r.atribut=='benefit'?'bg-success':'bg-danger'%> bg-opacity-75"><%= r.atribut.toUpperCase() %></span></td>
@@ -239,7 +237,6 @@
                             <table class="table table-custom table-hover mb-0" id="tka">
                                 <thead><tr>
                                     <th class="w-tight no-sort text-center"><input class="form-check-input" type="checkbox" onchange="toggleAll(this,'cka')"></th>
-                                    <th class="w-tight text-center">No</th>
                                     <th>Nama Pegawai</th><th>Jabatan</th>
                                     <% kriteria.forEach(c=>{ %> 
                                         <th class="text-center w-small">
@@ -249,10 +246,9 @@
                                     <% }) %> 
                                     <th class="text-end w-tight no-sort">Aksi</th>
                                 </tr></thead>
-                                <tbody><% karyawan.forEach((r, i) => { %>
+                                <tbody><% karyawan.forEach(r => { %>
                                     <tr>
                                         <td class="text-center"><input class="form-check-input cka" type="checkbox" name="ids[]" value="<%= r.id %>" onchange="chk('bdka','cka')"></td>
-                                        <td class="text-center fw-bold"><%= i + 1 %></td>
                                         <td class="fw-bold text-dark"><%= r.nama %></td><td class="text-muted"><%= r.jabatan %></td>
                                         <% kriteria.forEach(c=>{ %> <td class="text-center text-muted"><%= r.vals[c.id]||0 %></td> <% }) %>
                                         <td class="text-end">
