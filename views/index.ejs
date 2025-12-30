@@ -2,198 +2,245 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem SPK Karyawan</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sistem SPK - PAM TIRTA GROUP</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        /* FIX LAYOUT: Header tabel satu baris (tidak turun) */
-        table.dataTable thead th, table.dataTable tbody td {
-            white-space: nowrap;
-            vertical-align: middle;
-        }
+        :root { --primary: #0ea5e9; --primary-dark: #0284c7; --primary-light: #e0f2fe; --dark: #0f172a; --gray: #64748b; --bg: #f8fafc; --sidebar-w: 280px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--dark); overflow-x: hidden; }
+        
+        /* SIDEBAR & NAV */
+        #sidebar { width: var(--sidebar-w); height: 100vh; position: fixed; top:0; left:0; background: #fff; border-right: 1px solid #e2e8f0; transition: 0.3s; z-index: 1000; padding-top: 25px; }
+        .sidebar-brand { padding: 0 30px 30px; font-size: 1.2rem; font-weight: 800; color: var(--primary-dark); display: flex; align-items: center; gap: 12px; }
+        .nav-link { padding: 12px 20px; color: var(--gray); font-weight: 600; border-radius: 12px; display: flex; align-items: center; text-decoration: none; margin-bottom: 5px; transition:0.2s; }
+        .nav-link:hover, .nav-link.active { background: var(--primary-light); color: var(--primary-dark); transform: translateX(5px); }
+        .nav-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; padding: 15px 20px 5px; }
+        #content { margin-left: var(--sidebar-w); padding: 30px; transition: 0.3s; min-height: 100vh; }
+        
+        /* CARD MODERN */
+        .card-modern { background: #fff; border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; overflow: hidden; }
+        .card-header-modern { padding: 20px 30px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; font-weight: 700; background: #fff; font-size: 1.1rem; }
+        .card-body-modern { padding: 0; } /* Padding ditangani oleh DataTables Wrapper */
+        
+        /* TABLE STYLING */
+        .table-custom thead th { background: #f8fafc; color: var(--gray); text-transform: uppercase; font-size: 0.75rem; padding: 18px 20px; border-bottom: 2px solid #e2e8f0; font-weight: 700; white-space: nowrap; vertical-align: middle; }
+        .table-custom tbody td { padding: 16px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; color: var(--dark); font-size: 0.9rem; }
+        
+        /* PERBAIKAN LAYOUT DATATABLES (BIAR GAK MEPET) */
+        .dataTables_wrapper { padding: 25px 30px; } /* Memberi jarak nafas */
+        .dataTables_filter input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 15px; margin-left: 10px; }
+        .dataTables_length select { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 35px 8px 15px; margin: 0 10px; }
+        .dataTables_info { padding-top: 20px !important; color: var(--gray) !important; font-size: 0.9rem; }
+        .dataTables_paginate { padding-top: 15px !important; }
+        .page-item.active .page-link { background-color: var(--primary); border-color: var(--primary); }
+        .page-link { color: var(--primary); border-radius: 5px; margin: 0 3px; border: 1px solid #e2e8f0; }
+        .page-link:hover { background-color: var(--primary-light); color: var(--primary-dark); }
 
-        /* FIX CSS: Mempercantik Card */
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        /* RANKING MEDALS */
+        .medal-icon { font-size: 1.4rem; margin-right: 8px; vertical-align: middle; }
+        .rank-gold { color: #fbbf24; filter: drop-shadow(0 2px 2px rgba(251, 191, 36, 0.3)); }
+        .rank-silver { color: #94a3b8; filter: drop-shadow(0 2px 2px rgba(148, 163, 184, 0.3)); }
+        .rank-bronze { color: #b45309; filter: drop-shadow(0 2px 2px rgba(180, 83, 9, 0.3)); }
+
+        .login-bg { background: linear-gradient(135deg, #e0f2fe, #fff); height: 100vh; display: flex; align-items: center; justify-content: center; }
+        
+        @media(max-width:991px){ #sidebar{margin-left: calc(var(--sidebar-w)*-1);} #sidebar.active{margin-left:0; box-shadow: 5px 0 20px rgba(0,0,0,0.1);} #content{margin-left:0; padding: 20px;} .dataTables_wrapper { padding: 15px; } }
+        @media print { #sidebar, .no-print { display: none !important; } #content { margin: 0; padding: 0; } .card-modern { box-shadow: none; border: 1px solid #ddd; } .dataTables_wrapper { padding: 0; } }
     </style>
 </head>
+<body>
 
-<body class="bg-light">
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow px-4">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#">SPK Penilaian Karyawan</a>
-            
-            <div class="ms-auto">
-                <button class="btn btn-warning btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    <i class="fas fa-sign-in-alt"></i> Login Admin
+<% if(page === 'login') { %>
+    <div class="login-bg">
+        <div class="card-modern p-5 text-center" style="width: 450px;">
+            <div class="mb-4 d-inline-block bg-info bg-opacity-10 p-4 rounded-4 text-info"><i class="fas fa-droplet fa-3x"></i></div>
+            <h4 class="fw-bold mb-1">PAM TIRTA GROUP</h4>
+            <p class="text-muted small mb-4">Sistem Penilaian Kinerja (SAW)</p>
+            <% if(error){ %><div class="alert alert-danger py-2 small rounded-3 mb-4"><%= error %></div><% } %>
+            <form method="POST" action="/login" class="form-loading">
+                <div class="form-floating mb-3"><input name="username" class="form-control" placeholder="u" required><label>Username</label></div>
+                <div class="form-floating mb-4"><input type="password" name="password" class="form-control" placeholder="p" required><label>Password</label></div>
+                <button class="btn btn-primary w-100 py-3 fw-bold rounded-3 btn-submit">
+                    <span class="btn-text">MASUK DASHBOARD</span>
+                    <span class="btn-loader d-none"><i class="fas fa-circle-notch fa-spin me-2"></i>Memuat...</span>
                 </button>
+            </form>
+        </div>
+    </div>
+<% } else { %>
+
+<div class="wrapper">
+    <nav id="sidebar">
+        <div class="sidebar-brand"><i class="fas fa-water text-primary"></i> PAM TIRTA</div>
+        <div class="px-3">
+            <div class="nav-title">Menu Utama</div>
+            <a href="/dashboard" class="nav-link <%= page=='dashboard'?'active':'' %>" title="Halaman Utama"><i class="fas fa-chart-pie w-25"></i> Dashboard</a>
+            
+            <div class="nav-title">Master Data</div>
+            <a href="/kriteria" class="nav-link <%= page=='kriteria'?'active':'' %>" title="Atur Kriteria Penilaian"><i class="fas fa-sliders w-25"></i> Data Kriteria</a>
+            <a href="/karyawan" class="nav-link <%= page=='karyawan'?'active':'' %>" title="Kelola Data Pegawai"><i class="fas fa-users-gear w-25"></i> Data Pegawai</a>
+            
+            <div class="nav-title">Laporan</div>
+            <a href="/analisis" class="nav-link <%= page=='analisis'?'active':'' %>" title="Lihat Hasil Ranking"><i class="fas fa-award w-25"></i> Hasil Penilaian</a>
+            
+            <div class="mt-5 border-top pt-3">
+                <a href="/logout" class="nav-link text-danger" title="Keluar dari sistem"><i class="fas fa-sign-out-alt w-25"></i> Keluar</a>
             </div>
         </div>
     </nav>
 
-    <div class="container-fluid">
-        
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-white">
-                <h6 class="m-0 font-weight-bold text-primary">Data Ranking Karyawan</h6>
+    <div id="content">
+        <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-light d-lg-none border" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="fas fa-bars"></i></button>
+                <div><h4 class="fw-bold m-0"><%= page=='dashboard'?'Overview':(page=='kriteria'?'Master Kriteria':(page=='karyawan'?'Data Pegawai & Nilai':'Hasil Keputusan')) %></h4></div>
             </div>
-            
-            <div class="card-body p-4">
-                
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="tabelSPK" width="100%">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Karyawan</th>
-                                <th>Jabatan</th>
-                                <th>Keterangan / Alamat (Tes Scroll)</th>
-                                <th>Nilai Akhir</th>
-                                <th>Ranking</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (typeof users !== 'undefined' && users.length > 0) { %>
-                                <% users.forEach((user, index) => { %>
-                                <tr>
-                                    <td><%= index + 1 %></td>
-                                    <td><%= user.nama %></td>
-                                    <td><%= user.jabatan %></td>
-                                    <td><%= user.alamat || 'Tidak ada data alamat yang diisi untuk karyawan ini...' %></td>
-                                    <td><%= parseFloat(user.nilai_akhir).toFixed(2) %></td>
-                                    
-                                    <td data-order="<%= user.ranking %>">
-                                        <% if(user.ranking == 1) { %>
-                                            <span class="badge bg-warning text-dark"><i class="fas fa-trophy"></i> Juara 1</span>
-                                        <% } else if(user.ranking == 2) { %>
-                                            <span class="badge bg-secondary"><i class="fas fa-medal"></i> Juara 2</span>
-                                        <% } else if(user.ranking == 3) { %>
-                                            <span class="badge bg-danger"><i class="fas fa-medal"></i> Juara 3</span>
-                                        <% } else { %>
-                                            Peringkat <%= user.ranking %>
-                                        <% } %>
-                                    </td>
-                                    
-                                    <td>
-                                        <button class="btn btn-info btn-sm"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                            <% } else { %>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Budi Santoso</td>
-                                    <td>IT Staff</td>
-                                    <td>Jl. Jendral Sudirman No. Kav 50, Jakarta Selatan (Teks Panjang...)</td>
-                                    <td>95.50</td>
-                                    <td data-order="1"><span class="badge bg-warning text-dark">🥇 Juara 1</span></td>
-                                    <td>...</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Ahmad Dhani</td>
-                                    <td>HRD</td>
-                                    <td>Jl. Pondok Indah Raya No. 10, Jakarta Selatan (Teks Panjang...)</td>
-                                    <td>80.00</td>
-                                    <td data-order="10">Peringkat 10</td>
-                                    <td>...</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Siti Nurhaliza</td>
-                                    <td>Marketing</td>
-                                    <td>Jl. Melawai Raya No. 20, Blok M, Jakarta Selatan (Teks Panjang...)</td>
-                                    <td>90.00</td>
-                                    <td data-order="2"><span class="badge bg-secondary">🥈 Juara 2</span></td>
-                                    <td>...</td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div> </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Login Administrator</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/login" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" placeholder="admin">
-                        </div>
-                        
-                        <label class="form-label">Password</label>
-                        <div class="input-group mb-3">
-                            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Masukkan password">
-                            
-                            <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn">
-                                <i class="fas fa-eye" id="iconMata"></i>
-                            </button>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">Masuk</button>
-                    </form>
-                </div>
+            <div class="bg-white border rounded-pill px-3 py-2 d-flex align-items-center gap-3 shadow-sm">
+                <div class="text-end lh-1"><div class="fw-bold small"><%= user.nama_lengkap %></div><small class="text-muted" style="font-size:10px">Admin</small></div>
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:35px;height:35px">A</div>
             </div>
         </div>
+
+        <% if(page === 'dashboard') { %>
+            <div class="row g-4">
+                <div class="col-md-6"><div class="card-modern p-4 d-flex align-items-center"><div class="bg-primary bg-opacity-10 text-primary p-4 rounded-4 me-4"><i class="fas fa-users fa-2x"></i></div><div><h6 class="text-muted fw-bold small text-uppercase">Total Pegawai</h6><h2 class="m-0 fw-bold"><%= c_k %></h2></div></div></div>
+                <div class="col-md-6"><div class="card-modern p-4 d-flex align-items-center"><div class="bg-info bg-opacity-10 text-info p-4 rounded-4 me-4"><i class="fas fa-tasks fa-2x"></i></div><div><h6 class="text-muted fw-bold small text-uppercase">Kriteria Aktif</h6><h2 class="m-0 fw-bold"><%= c_c %></h2></div></div></div>
+                <div class="col-12"><div class="card-modern p-5 text-white position-relative" style="background: linear-gradient(135deg, #0ea5e9, #0369a1);"><h3 class="fw-bold mb-2">Selamat Datang, Admin!</h3><p>Sistem Pendukung Keputusan Penilaian Kinerja Karyawan (Metode SAW).</p></div></div>
+            </div>
+
+        <% } else if(page === 'kriteria') { %>
+            <div class="card-modern">
+                <div class="card-header-modern"><span>Daftar Kriteria</span> <button class="btn btn-primary btn-sm rounded-3 shadow-sm" onclick="modKriteria()">+ Tambah Data</button></div>
+                <div class="card-body-modern">
+                    <form id="formKriteria" method="POST" action="/del_kriteria"><div class="table-responsive"><table class="table table-custom table-hover" id="tableData">
+                        <thead><tr><th class="text-center" style="width:50px">No</th><th>Kode</th><th>Nama Kriteria</th><th>Atribut</th><th class="text-center">Bobot</th><th class="text-end">Aksi</th></tr></thead>
+                        <tbody><% kriteria.forEach((r,i) => { %> 
+                            <tr><td class="text-center fw-bold"><%= i+1 %></td><td><span class="badge bg-light text-dark border"><%= r.kode %></span></td><td class="fw-bold"><%= r.nama %></td><td><span class="badge <%= r.atribut=='benefit'?'bg-success':'bg-danger'%> bg-opacity-75"><%= r.atribut.toUpperCase() %></span></td><td class="text-center"><%= r.bobot %></td>
+                            <td class="text-end"><button type="button" class="btn btn-sm btn-light border text-primary" data-id="<%= r.id %>" data-kode="<%= r.kode %>" data-nama="<%= r.nama %>" data-atribut="<%= r.atribut %>" data-bobot="<%= r.bobot %>" onclick="modKriteria(this)"><i class="fas fa-pen"></i></button> <a href="/del_kriteria?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus Data?')"><i class="fas fa-trash"></i></a></td></tr> 
+                        <% }) %></tbody>
+                    </table></div></form>
+                </div>
+            </div>
+
+        <% } else if(page === 'karyawan') { %>
+            <div class="d-flex justify-content-end gap-2 mb-4 no-print">
+                <button class="btn btn-white border shadow-sm btn-sm" onclick="modImport()"><i class="fas fa-file-csv me-1"></i> Import CSV</button>
+                <a href="/export_csv" class="btn btn-white border shadow-sm btn-sm"><i class="fas fa-download me-1"></i> Export CSV</a>
+                <button class="btn btn-primary shadow-sm btn-sm fw-bold" onclick="modKaryawan()">+ Input Pegawai</button>
+            </div>
+            <div class="card-modern">
+                <div class="card-header-modern"><span>Data Pegawai & Nilai</span> <button class="btn btn-danger btn-sm d-none" id="bdka" onclick="submitBulk()">Hapus Terpilih</button></div>
+                <div class="card-body-modern">
+                    <form id="formKaryawan" method="POST" action="/del_karyawan"><div class="table-responsive"><table class="table table-custom table-hover" id="tableData">
+                        <thead><tr><th class="text-center no-sort" style="width:10px"><input class="form-check-input" type="checkbox" onchange="toggleAll(this)"></th><th class="text-center" style="width:40px">No</th><th>Nama Pegawai</th><th>Jabatan</th>
+                        <% kriteria.forEach(c=>{ %> <th class="text-center" style="min-width:80px"><%= c.kode %><br><small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small></th> <% }) %> <th class="text-end no-sort">Aksi</th></tr></thead>
+                        <tbody><% karyawan.forEach((r,i) => { %> 
+                            <tr><td class="text-center"><input class="form-check-input cka" type="checkbox" name="ids[]" value="<%= r.id %>" onchange="chk()"></td><td class="text-center fw-bold"><%= i+1 %></td><td class="fw-bold"><%= r.nama %></td><td class="text-muted small"><%= r.jabatan %></td>
+                            <% kriteria.forEach(c=>{ %> <td class="text-center"><%= r.vals[c.id]||0 %></td> <% }) %>
+                            <td class="text-end"><button type="button" class="btn btn-sm btn-light border text-primary" data-id="<%= r.id %>" data-nama="<%= r.nama %>" data-jabatan="<%= r.jabatan %>" data-vals='<%- JSON.stringify(r.vals) %>' onclick="modKaryawan(this)"><i class="fas fa-pen"></i></button> <a href="/del_karyawan?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus?')"><i class="fas fa-trash"></i></a></td></tr> 
+                        <% }) %></tbody>
+                    </table></div></form>
+                </div>
+            </div>
+
+        <% } else if(page === 'analisis') { %>
+            <div class="card-modern">
+                <div class="card-header-modern"><span>Hasil Perankingan SAW</span> <button onclick="window.print()" class="btn btn-sm btn-outline-secondary no-print">Print PDF</button></div>
+                <div class="card-body-modern"><div class="table-responsive"><table class="table table-custom table-striped mb-0" id="trank">
+                    <thead><tr><th class="ps-4" style="width:120px">Rank</th><th style="min-width:200px">Nama Pegawai</th><% kriteria.forEach(c=>{ %> <th class="text-center"><%= c.kode %><br><small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small></th> <% }) %> <th class="text-end pe-4 text-success">Total Nilai (V)</th></tr></thead>
+                    <tbody><% let no=1; hasil.forEach(h => { 
+                        let medal = '';
+                        // Ikon Piala untuk Juara 1, 2, 3
+                        if(no === 1) medal='<i class="fas fa-trophy medal-icon rank-gold"></i>'; 
+                        else if(no === 2) medal='<i class="fas fa-medal medal-icon rank-silver"></i>'; 
+                        else if(no === 3) medal='<i class="fas fa-medal medal-icon rank-bronze"></i>'; 
+                    %> 
+                        <tr>
+                            <td class="ps-4" data-order="<%= no %>">
+                                <% if(no <= 3) { %> 
+                                    <%- medal %> <span class="fw-bold text-dark">#<%= no++ %></span>
+                                <% } else { %>
+                                    <span class="badge bg-light text-muted border rounded-pill ms-2">#<%= no++ %></span>
+                                <% } %>
+                            </td>
+                            <td><div class="fw-bold"><%= h.nama %></div><small class="text-muted"><%= h.jabatan %></small></td>
+                            <% kriteria.forEach(c=>{ %> <td class="text-center text-muted"><%= h.detail[c.kode] %></td> <% }) %>
+                            <td class="text-end pe-4 fw-bold text-success fs-5"><%= h.nilai.toFixed(4) %></td>
+                        </tr> 
+                    <% }) %></tbody>
+                </table></div></div>
+            </div>
+            <div class="card-modern no-print"><div class="card-header-modern"><span>Grafik 10 Terbaik</span></div><div class="p-5 d-flex justify-content-center"><div style="width:400px; max-width:100%"><canvas id="myChart"></canvas></div></div></div>
+            <script>
+                new Chart(document.getElementById('myChart'), { type: 'pie', data: { labels: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nama)) %>, datasets: [{ data: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nilai)) %>, backgroundColor: ['#0ea5e9','#38bdf8','#7dd3fc','#0284c7','#0369a1'] }] }, options: {plugins:{legend:{position:'bottom'}}} });
+                $(document).ready(function(){ $('#trank').DataTable({ language: { search: "Cari Ranking:", lengthMenu: "Tampil _MENU_" } }); });
+            </script>
+        <% } %>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<div class="modal fade" id="mimp"><div class="modal-dialog"><form method="POST" action="/import_csv" enctype="multipart/form-data" class="modal-content border-0 shadow form-loading">
+    <div class="modal-header border-0"><h5 class="fw-bold">Import CSV</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+        <div class="alert alert-info small">
+            <h6 class="fw-bold"><i class="fas fa-info-circle me-1"></i> Panduan Format CSV:</h6>
+            <ol class="mb-2 ps-3"><li>Baris pertama Header.</li><li>Pemisah koma (,).</li><li>Urutan: <b>Nama, Jabatan, Nilai C1, Nilai C2...</b></li></ol>
+            <button type="button" class="btn btn-xs btn-outline-primary mt-1" onclick="downloadTemplate()"><i class="fas fa-download me-1"></i> Download Template</button>
+        </div>
+        <div class="mb-3"><label class="fw-bold small mb-1">Pilih File</label><input type="file" name="file_csv" class="form-control" accept=".csv" required></div>
+    </div>
+    <div class="modal-footer border-0"><button class="btn btn-primary w-100 btn-submit"><span class="btn-text">Upload & Proses</span><span class="btn-loader d-none"><i class="fas fa-circle-notch fa-spin me-2"></i>Memproses...</span></button></div>
+</form></div></div>
 
-    <script>
-        $(document).ready(function() {
-            // 1. Inisialisasi DataTables
-            $('#tabelSPK').DataTable({
-                "ordering": true,
-                "language": {
-                    "search": "Cari Data:",
-                    "lengthMenu": "Tampil _MENU_ baris",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data"
-                }
-            });
+<div class="modal fade" id="mk"><div class="modal-dialog"><form method="POST" action="/save_kriteria" class="modal-content border-0 shadow form-loading" id="fk"><div class="modal-header border-0"><h5 class="fw-bold">Form Kriteria</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="kid"><div class="mb-3"><label class="small fw-bold">Kode</label><input name="kode" id="kk" class="form-control" required></div><div class="mb-3"><label class="small fw-bold">Nama</label><input name="nama" id="kn" class="form-control" required></div><div class="row"><div class="col-6"><label class="small fw-bold">Atribut</label><select name="atribut" id="ka" class="form-control"><option value="benefit">Benefit</option><option value="cost">Cost</option></select></div><div class="col-6"><label class="small fw-bold">Bobot</label><input type="number" step="0.1" name="bobot" id="kb" class="form-control" required></div></div></div><div class="modal-footer border-0"><button class="btn btn-primary w-100 btn-submit"><span class="btn-text">Simpan</span><span class="btn-loader d-none"><i class="fas fa-circle-notch fa-spin me-2"></i>Menyimpan...</span></button></div></form></div></div>
 
-            // 2. Logic Show/Hide Password (Javascript Murni)
-            const toggleBtn = document.getElementById('togglePasswordBtn');
-            const passInput = document.getElementById('inputPassword');
-            const icon = document.getElementById('iconMata');
+<div class="modal fade" id="mka"><div class="modal-dialog"><form method="POST" action="/save_karyawan" class="modal-content border-0 shadow form-loading" id="fkar"><div class="modal-header border-0"><h5 class="fw-bold">Form Pegawai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="karid"><div class="mb-3"><label class="small fw-bold">Nama Lengkap</label><input name="nama" id="karn" class="form-control" required></div><div class="mb-4"><label class="small fw-bold">Jabatan</label><input name="jabatan" id="karj" class="form-control" required></div><div class="bg-light p-3 rounded"><h6 class="small fw-bold text-muted mb-3">NILAI PENILAIAN</h6><div class="row g-2"><% if(typeof kriteria!=='undefined'){ kriteria.forEach(c=>{ %> <div class="col-6"><label class="small fw-bold mb-1"><%= c.kode %> - <%= c.nama %></label><input type="number" step="0.01" name="val_<%= c.id %>" id="val_<%= c.id %>" class="form-control form-control-sm" required></div> <% })} %></div></div></div><div class="modal-footer border-0"><button class="btn btn-primary w-100 btn-submit"><span class="btn-text">Simpan Data</span><span class="btn-loader d-none"><i class="fas fa-circle-notch fa-spin me-2"></i>Menyimpan...</span></button></div></form></div></div>
 
-            if(toggleBtn) {
-                toggleBtn.addEventListener('click', function() {
-                    // Cek tipe apakah password atau text
-                    const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passInput.setAttribute('type', type);
+<script>
+    $(document).ready(function(){ 
+        const dtConfig = { language: { search: "Cari Data:", lengthMenu: "Tampil _MENU_ baris", info: "Menampilkan _START_ - _END_ dari _TOTAL_ data" }, columnDefs: [ { orderable: false, targets: 0 } ] };
+        $('#tableData').DataTable(dtConfig);
 
-                    // Ubah ikon mata
-                    if (type === 'text') {
-                        icon.classList.remove('fa-eye');
-                        icon.classList.add('fa-eye-slash'); // Mata dicoret
-                    } else {
-                        icon.classList.remove('fa-eye-slash');
-                        icon.classList.add('fa-eye'); // Mata biasa
-                    }
-                });
-            }
+        $('.form-loading').on('submit', function() {
+            const btn = $(this).find('.btn-submit');
+            btn.prop('disabled', true); btn.find('.btn-text').addClass('d-none'); btn.find('.btn-loader').removeClass('d-none');
         });
-    </script>
+    });
 
+    function downloadTemplate() {
+        let csvContent = "data:text/csv;charset=utf-8,";
+        let header = ["Nama Lengkap", "Jabatan"];
+        const krits = <%- JSON.stringify(typeof kriteria!=='undefined'?kriteria:[]) %>;
+        krits.forEach(k => header.push(`Nilai ${k.kode}`)); 
+        csvContent += header.join(",") + "\r\n";
+        let sample = ["Contoh Nama", "Staff", ...krits.map(()=>"0")];
+        csvContent += sample.join(",");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Template_Import.csv");
+        document.body.appendChild(link);
+        link.click();
+    }
+
+    function modKriteria(btn=null){ document.getElementById('fk').reset(); $('#kid').val(''); if(btn) { const d=$(btn).data(); $('#kid').val(d.id); $('#kk').val(d.kode); $('#kn').val(d.nama); $('#ka').val(d.atribut); $('#kb').val(d.bobot); } new bootstrap.Modal('#mk').show(); }
+    function modKaryawan(btn=null){ document.getElementById('fkar').reset(); $('#karid').val(''); if(btn) { const d=$(btn).data(); $('#karid').val(d.id); $('#karn').val(d.nama); $('#karj').val(d.jabatan); if(d.vals) { for(let[k,v] of Object.entries(d.vals)) { $('#val_'+k).val(v); } } } new bootstrap.Modal('#mka').show(); }
+    function modImport(){ new bootstrap.Modal('#mimp').show(); }
+    function toggleAll(src){ $('.cka').prop('checked',src.checked); chk(); }
+    function chk(){ $('.cka:checked').length?$('#bdka').removeClass('d-none'):$('#bdka').addClass('d-none'); }
+    function submitBulk(){ if(confirm('Hapus data terpilih?')) $('#formKaryawan').submit(); }
+</script>
+<% } %>
 </body>
 </html>
