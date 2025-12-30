@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SPK Penilaian Kehadiran Karyawan</title>
+    <title>Sistem SPK - PAM Tirta Group</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -17,12 +17,13 @@
 
     <style>
         :root { 
-            --primary: #10b981; 
-            --primary-dark: #059669; 
-            --primary-light: #ecfdf5;
-            --dark: #1e293b; 
+            /* THEME: OCEAN BLUE (PAM TIRTA) */
+            --primary: #0ea5e9; 
+            --primary-dark: #0284c7; 
+            --primary-light: #e0f2fe;
+            --dark: #0f172a; 
             --gray: #64748b;
-            --bg: #f8fafc; 
+            --bg: #f1f5f9; 
             --sidebar-w: 280px; 
         }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--dark); overflow-x: hidden; }
@@ -33,7 +34,7 @@
             background: #ffffff; border-right: 1px solid #e2e8f0; transition: 0.3s; z-index: 1000;
             padding-top: 25px;
         }
-        .sidebar-brand { padding: 0 30px 30px; font-size: 1.2rem; font-weight: 800; color: var(--primary-dark); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px; }
+        .sidebar-brand { padding: 0 30px 30px; font-size: 1.25rem; font-weight: 800; color: var(--primary-dark); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px; }
         .nav-section { padding: 0 15px; margin-bottom: 25px; }
         .nav-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; padding: 0 15px; margin-bottom: 8px; letter-spacing: 0.5px; }
         .nav-link { 
@@ -51,7 +52,7 @@
         /* CARD MODERN */
         .card-modern { 
             background: #fff; border: none; border-radius: 16px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
             margin-bottom: 30px; overflow: hidden;
         }
         .card-header-modern { 
@@ -63,7 +64,7 @@
         
         /* BUTTONS */
         .btn-modern { background: var(--primary); color: #fff; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 600; transition: 0.2s; font-size: 0.9rem; }
-        .btn-modern:hover { background: var(--primary-dark); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-modern:hover { background: var(--primary-dark); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
         
         /* DATATABLES */
         .dataTables_wrapper { padding: 0; }
@@ -71,12 +72,7 @@
         .dataTables_wrapper .row:last-child { padding: 20px 25px; margin: 0; border-top: 1px solid #f1f5f9; }
         .dataTables_filter label, .dataTables_length label { font-weight: 600; color: var(--gray); font-size: 0.9rem; }
         .dataTables_filter input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; outline: none; transition: 0.2s; margin-left: 10px; }
-        
-        /* FIX DROPDOWN & ARROW */
-        .dataTables_length select { 
-            border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 24px 6px 12px !important; outline: none; transition: 0.2s; margin: 0 10px; cursor: pointer; background-color: #fff; min-width: 65px; 
-            background-image: none !important; -webkit-appearance: auto !important; -moz-appearance: auto !important; appearance: auto !important; 
-        }
+        .dataTables_length select { border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 24px 6px 12px !important; outline: none; transition: 0.2s; margin: 0 10px; cursor: pointer; background-color: #fff; min-width: 65px; background-image: none !important; -webkit-appearance: auto !important; -moz-appearance: auto !important; appearance: auto !important; }
         .dataTables_filter input:focus, .dataTables_length select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
         /* TABLE */
@@ -99,7 +95,7 @@
         .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
         .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); }
         .sticky-col { position: sticky; top: 30px; z-index: 50; }
-        .login-bg { background: linear-gradient(135deg, #ecfdf5, #fff); height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .login-bg { background: linear-gradient(135deg, #e0f2fe, #fff); height: 100vh; display: flex; align-items: center; justify-content: center; }
 
         @media(max-width:991px){ 
             #sidebar{margin-left: calc(var(--sidebar-w)*-1);} #sidebar.active{margin-left:0; box-shadow: 5px 0 20px rgba(0,0,0,0.1);} 
@@ -113,14 +109,14 @@
 <% if(page === 'login') { %>
     <div class="login-bg">
         <div class="card-modern p-5 text-center" style="width: 450px;">
-            <div class="mb-4 d-inline-block bg-success bg-opacity-10 p-4 rounded-4 text-success"><i class="fas fa-clipboard-user fa-3x"></i></div>
-            <h4 class="fw-bold mb-1">Login Admin</h4>
-            <p class="text-muted small mb-4">SPK Penilaian Kehadiran Karyawan</p>
+            <div class="mb-4 d-inline-block bg-info bg-opacity-10 p-4 rounded-4 text-info"><i class="fas fa-droplet fa-3x"></i></div>
+            <h4 class="fw-bold mb-1">PAM TIRTA GROUP</h4>
+            <p class="text-muted small mb-4">Sistem Penilaian Kinerja Karyawan</p>
             <% if(error){ %><div class="alert alert-danger py-2 small rounded-3 mb-4"><%= error %></div><% } %>
             <form method="POST" action="/login">
                 <div class="form-floating mb-3"><input name="username" class="form-control" id="u" placeholder="u" required><label>Username</label></div>
                 <div class="form-floating mb-4"><input type="password" name="password" class="form-control" id="p" placeholder="p" required><label>Password</label></div>
-                <button class="btn btn-modern w-100 py-3">MASUK APLIKASI</button>
+                <button class="btn btn-modern w-100 py-3">MASUK DASHBOARD</button>
             </form>
         </div>
     </div>
@@ -128,21 +124,21 @@
 
 <div class="wrapper">
     <nav id="sidebar">
-        <div class="sidebar-brand"><i class="fas fa-user-clock text-success"></i> SPK KEHADIRAN</div>
+        <div class="sidebar-brand"><i class="fas fa-water text-primary"></i> PAM TIRTA GROUP</div>
         <div class="nav-section">
-            <a href="/dashboard" class="nav-link <%= page=='dashboard'?'active':'' %>"><i class="fas fa-grid-2"></i> Dashboard</a>
+            <a href="/dashboard" class="nav-link <%= page=='dashboard'?'active':'' %>"><i class="fas fa-chart-pie"></i> Dashboard</a>
         </div>
         <div class="nav-title">Master Data</div>
         <div class="nav-section">
-            <a href="/kriteria" class="nav-link <%= page=='kriteria'?'active':'' %>"><i class="fas fa-sliders"></i> Data Kriteria</a>
-            <a href="/karyawan" class="nav-link <%= page=='karyawan'?'active':'' %>"><i class="fas fa-users"></i> Data Karyawan</a>
+            <a href="/kriteria" class="nav-link <%= page=='kriteria'?'active':'' %>"><i class="fas fa-list-check"></i> Data Kriteria</a>
+            <a href="/karyawan" class="nav-link <%= page=='karyawan'?'active':'' %>"><i class="fas fa-users-gear"></i> Data Pegawai</a>
         </div>
-        <div class="nav-title">Analisis Keputusan</div>
+        <div class="nav-title">Keputusan</div>
         <div class="nav-section">
-            <a href="/analisis" class="nav-link <%= page=='analisis'?'active':'' %>"><i class="fas fa-clipboard-check"></i> Hasil Penilaian</a>
+            <a href="/analisis" class="nav-link <%= page=='analisis'?'active':'' %>"><i class="fas fa-award"></i> Hasil Penilaian</a>
         </div>
         <div class="nav-section mt-5 border-top pt-4">
-            <a href="/logout" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <a href="/logout" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Keluar Sistem</a>
         </div>
     </nav>
 
@@ -151,13 +147,13 @@
             <div class="d-flex align-items-center gap-3">
                 <button class="btn btn-light d-lg-none border" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="fas fa-bars"></i></button>
                 <div>
-                    <h3 class="fw-bold m-0"><%= page=='dashboard'?'Dashboard Utama':(page=='kriteria'?'Master Kriteria':(page=='karyawan'?'Data Karyawan':'Penilaian Kehadiran')) %></h3>
-                    <p class="text-muted m-0 small">Sistem Penilaian Kehadiran Karyawan</p>
+                    <h3 class="fw-bold m-0"><%= page=='dashboard'?'Overview':(page=='kriteria'?'Master Kriteria':(page=='karyawan'?'Data Pegawai':'Hasil Keputusan')) %></h3>
+                    <p class="text-muted m-0 small">Sistem Informasi SPK - PAM Tirta Group</p>
                 </div>
             </div>
             <div class="bg-white border rounded-pill px-3 py-2 d-flex align-items-center gap-3 shadow-sm">
                 <div class="text-end lh-1"><div class="fw-bold small"><%= user.nama_lengkap %></div><small class="text-muted" style="font-size:10px">Administrator</small></div>
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:35px;height:35px">A</div>
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:35px;height:35px">A</div>
             </div>
         </div>
 
@@ -165,24 +161,24 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card-modern p-4 d-flex align-items-center">
-                        <div class="bg-success bg-opacity-10 text-success p-4 rounded-4 me-4"><i class="fas fa-users fa-2x"></i></div>
-                        <div><h6 class="text-muted fw-bold text-uppercase small mb-1">Total Karyawan</h6><h2 class="m-0 fw-bold display-6"><%= c_k %></h2></div>
+                        <div class="bg-primary bg-opacity-10 text-primary p-4 rounded-4 me-4"><i class="fas fa-users fa-2x"></i></div>
+                        <div><h6 class="text-muted fw-bold text-uppercase small mb-1">Total Pegawai</h6><h2 class="m-0 fw-bold display-6"><%= c_k %></h2></div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card-modern p-4 d-flex align-items-center">
-                        <div class="bg-warning bg-opacity-10 text-warning p-4 rounded-4 me-4"><i class="fas fa-layer-group fa-2x"></i></div>
-                        <div><h6 class="text-muted fw-bold text-uppercase small mb-1">Total Kriteria</h6><h2 class="m-0 fw-bold display-6"><%= c_c %></h2></div>
+                        <div class="bg-info bg-opacity-10 text-info p-4 rounded-4 me-4"><i class="fas fa-clipboard-list fa-2x"></i></div>
+                        <div><h6 class="text-muted fw-bold text-uppercase small mb-1">Kriteria Aktif</h6><h2 class="m-0 fw-bold display-6"><%= c_c %></h2></div>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="card-modern p-5 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #10b981, #047857);">
+                    <div class="card-modern p-5 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #0ea5e9, #0369a1);">
                         <div class="position-relative z-1" style="max-width: 600px;">
-                            <h2 class="fw-bold mb-3">SPK Penilaian Kehadiran Karyawan</h2>
-                            <p class="mb-4 opacity-75">Sistem ini menggunakan metode Simple Additive Weighting (SAW) untuk menilai kinerja dan kedisiplinan karyawan secara objektif.</p>
-                            <a href="/analisis" class="btn btn-light text-success fw-bold px-4 py-2 shadow-sm">Lihat Penilaian <i class="fas fa-arrow-right ms-2"></i></a>
+                            <h2 class="fw-bold mb-3">Selamat Datang di Sistem PAM Tirta</h2>
+                            <p class="mb-4 opacity-75">Sistem Pendukung Keputusan Penilaian Kehadiran Karyawan menggunakan metode Simple Additive Weighting (SAW) untuk evaluasi kinerja yang objektif.</p>
+                            <a href="/analisis" class="btn btn-light text-primary fw-bold px-4 py-2 shadow-sm">Lihat Ranking <i class="fas fa-arrow-right ms-2"></i></a>
                         </div>
-                        <i class="fas fa-chart-line position-absolute opacity-25" style="font-size: 15rem; right: -20px; bottom: -50px;"></i>
+                        <i class="fas fa-water position-absolute opacity-25" style="font-size: 15rem; right: -20px; bottom: -50px;"></i>
                     </div>
                 </div>
             </div>
@@ -190,10 +186,10 @@
         <% } else if(page === 'kriteria') { %>
             <div class="card-modern">
                 <div class="card-header-modern">
-                    <div class="d-flex align-items-center gap-3"><span class="bg-primary text-white rounded p-2"><i class="fas fa-sliders"></i></span> Parameter Kriteria</div>
+                    <div class="d-flex align-items-center gap-3"><span class="bg-primary text-white rounded p-2"><i class="fas fa-sliders"></i></span> Konfigurasi Kriteria</div>
                     <div class="d-flex gap-2">
-                        <button class="btn btn-danger btn-sm d-none" type="button" id="bdk" onclick="submitBulk('formKriteria', '/del_kriteria')"><i class="fas fa-trash me-1"></i> Hapus Terpilih</button>
-                        <button class="btn btn-modern btn-sm" onclick="modKriteria()">+ Tambah Data</button>
+                        <button class="btn btn-danger btn-sm d-none" type="button" id="bdk" onclick="submitBulk('formKriteria', '/del_kriteria')"><i class="fas fa-trash me-1"></i> Hapus</button>
+                        <button class="btn btn-modern btn-sm" onclick="modKriteria()">+ Kriteria Baru</button>
                     </div>
                 </div>
                 <div class="card-body-modern">
@@ -225,15 +221,15 @@
 
         <% } else if(page === 'karyawan') { %>
             <div class="d-flex justify-content-end gap-2 mb-4 no-print">
-                <button class="btn btn-white border text-success fw-bold btn-sm shadow-sm" onclick="modImport()"><i class="fas fa-file-csv me-1"></i> Import CSV</button>
-                <a href="/export_csv" class="btn btn-white border text-success fw-bold btn-sm shadow-sm"><i class="fas fa-download me-1"></i> Export CSV</a>
+                <button class="btn btn-white border text-primary fw-bold btn-sm shadow-sm" onclick="modImport()"><i class="fas fa-file-csv me-1"></i> Import CSV</button>
+                <a href="/export_csv" class="btn btn-white border text-primary fw-bold btn-sm shadow-sm"><i class="fas fa-download me-1"></i> Export CSV</a>
                 <button class="btn btn-modern btn-sm shadow-sm" onclick="modKaryawan()"><i class="fas fa-plus me-1"></i> Input Data</button>
             </div>
             
             <div class="card-modern">
                 <div class="card-header-modern">
-                    <div class="d-flex align-items-center gap-3"><span class="bg-warning text-white rounded p-2"><i class="fas fa-users"></i></span> Data Absensi Karyawan</div>
-                    <button class="btn btn-danger btn-sm d-none" type="button" id="bdka" onclick="submitBulk('formKaryawan', '/del_karyawan')"><i class="fas fa-trash me-1"></i> Hapus Terpilih</button>
+                    <div class="d-flex align-items-center gap-3"><span class="bg-warning text-white rounded p-2"><i class="fas fa-users-gear"></i></span> Data Absensi & Nilai</div>
+                    <button class="btn btn-danger btn-sm d-none" type="button" id="bdka" onclick="submitBulk('formKaryawan', '/del_karyawan')"><i class="fas fa-trash me-1"></i> Hapus</button>
                 </div>
                 <div class="card-body-modern">
                     <form id="formKaryawan" method="POST" action="/del_karyawan">
@@ -241,7 +237,7 @@
                             <table class="table table-custom table-hover mb-0" id="tka">
                                 <thead><tr>
                                     <th class="w-tight no-sort text-center"><input class="form-check-input" type="checkbox" onchange="toggleAll(this,'cka')"></th>
-                                    <th>Nama Karyawan</th><th>Jabatan</th>
+                                    <th>Nama Pegawai</th><th>Jabatan</th>
                                     <% kriteria.forEach(c=>{ %> 
                                         <th class="text-center w-small">
                                             <%= c.kode %><br>
@@ -272,7 +268,7 @@
                 <div class="col-12">
                     <div class="card-modern">
                         <div class="card-header-modern bg-white">
-                            <div class="d-flex align-items-center gap-3"><span class="bg-success text-white rounded p-2"><i class="fas fa-clipboard-check"></i></span> Hasil Perankingan</div>
+                            <div class="d-flex align-items-center gap-3"><span class="bg-success text-white rounded p-2"><i class="fas fa-award"></i></span> Hasil Perankingan SAW</div>
                             <button onclick="window.print()" class="btn btn-sm btn-outline-secondary no-print fw-bold"><i class="fas fa-print me-1"></i> Print PDF</button>
                         </div>
                         <div class="card-body-modern">
@@ -281,7 +277,7 @@
                                     <thead>
                                         <tr>
                                             <th class="ps-4 w-tight">Rank</th>
-                                            <th style="min-width:200px">Nama Karyawan</th>
+                                            <th style="min-width:200px">Nama Pegawai</th>
                                             <% kriteria.forEach(c=>{ %> 
                                                 <th class="text-center w-small">
                                                     <%= c.kode %><br><span style="font-size:0.65rem; font-weight:normal; text-transform:none; color:#94a3b8"><%= c.nama %></span>
@@ -306,15 +302,15 @@
                     </div>
                     
                     <div class="card-modern no-print">
-                        <div class="card-header-modern"><span>Visualisasi 10 Terbaik</span></div>
+                        <div class="card-header-modern"><span>Statistik 10 Pegawai Terbaik</span></div>
                         <div class="p-5 d-flex justify-content-center"><div style="width:400px; max-width:100%"><canvas id="myChart"></canvas></div></div>
                     </div>
                 </div>
             </div>
             <script>
-                new Chart(document.getElementById('myChart'), { type: 'pie', data: { labels: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nama)) %>, datasets: [{ data: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nilai)) %>, backgroundColor: ['#10b981','#34d399','#6ee7b7','#065f46','#064e3b'] }] }, options: {plugins:{legend:{position:'bottom'}}} });
+                new Chart(document.getElementById('myChart'), { type: 'pie', data: { labels: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nama)) %>, datasets: [{ data: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nilai)) %>, backgroundColor: ['#0ea5e9','#38bdf8','#7dd3fc','#0284c7','#0369a1'] }] }, options: {plugins:{legend:{position:'bottom'}}} });
                 $(document).ready(function(){ 
-                    const dtConfig = { language: { search: "Cari:", lengthMenu: "Tampil _MENU_", info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data" } };
+                    const dtConfig = { language: { search: "Cari Pegawai:", lengthMenu: "Tampil _MENU_", info: "Menampilkan _START_ s/d _END_ dari _TOTAL_ data" } };
                     $('#trank').DataTable(dtConfig); 
                 });
             </script>
@@ -324,12 +320,11 @@
 
 <div class="modal fade" id="mk"><div class="modal-dialog"><form method="POST" action="/save_kriteria" class="modal-content border-0 shadow"><div class="modal-header border-0"><h5 class="fw-bold">Form Kriteria</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="kid"><div class="mb-3"><label class="fw-bold small">Kode</label><input name="kode" id="kk" class="form-control" required></div><div class="mb-3"><label class="fw-bold small">Nama</label><input name="nama" id="kn" class="form-control" required></div><div class="row"><div class="col-6"><label class="fw-bold small">Atribut</label><select name="atribut" id="ka" class="form-control"><option value="benefit">Benefit</option><option value="cost">Cost</option></select></div><div class="col-6"><label class="fw-bold small">Bobot</label><input type="number" step="0.1" name="bobot" id="kb" class="form-control" required></div></div></div><div class="modal-footer border-0"><button class="btn btn-modern w-100">Simpan Data</button></div></form></div></div>
 
-<div class="modal fade" id="mka"><div class="modal-dialog"><form method="POST" action="/save_karyawan" class="modal-content border-0 shadow"><div class="modal-header border-0"><h5 class="fw-bold">Form Karyawan</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="karid"><div class="mb-3"><label class="fw-bold small">Nama Lengkap</label><input name="nama" id="karn" class="form-control" required></div><div class="mb-4"><label class="fw-bold small">Jabatan</label><input name="jabatan" id="karj" class="form-control" required></div><div class="bg-light p-3 rounded"><h6 class="fw-bold small text-muted mb-3 text-uppercase">Nilai Kriteria</h6><div class="row g-2"><% if(typeof kriteria!=='undefined'){ kriteria.forEach(c=>{ %> <div class="col-6"><label class="small fw-bold mb-1"><%= c.kode %> - <%= c.nama %></label><input type="number" step="0.01" name="nilai[<%= c.id %>]" id="val_<%= c.id %>" class="form-control form-control-sm" required></div> <% })} %></div></div></div><div class="modal-footer border-0"><button class="btn btn-modern w-100">Simpan Data</button></div></form></div></div>
+<div class="modal fade" id="mka"><div class="modal-dialog"><form method="POST" action="/save_karyawan" class="modal-content border-0 shadow"><div class="modal-header border-0"><h5 class="fw-bold">Form Pegawai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="karid"><div class="mb-3"><label class="fw-bold small">Nama Lengkap</label><input name="nama" id="karn" class="form-control" required></div><div class="mb-4"><label class="fw-bold small">Jabatan</label><input name="jabatan" id="karj" class="form-control" required></div><div class="bg-light p-3 rounded"><h6 class="fw-bold small text-muted mb-3 text-uppercase">Nilai Penilaian</h6><div class="row g-2"><% if(typeof kriteria!=='undefined'){ kriteria.forEach(c=>{ %> <div class="col-6"><label class="small fw-bold mb-1"><%= c.kode %> - <%= c.nama %></label><input type="number" step="0.01" name="nilai[<%= c.id %>]" id="val_<%= c.id %>" class="form-control form-control-sm" required></div> <% })} %></div></div></div><div class="modal-footer border-0"><button class="btn btn-modern w-100">Simpan Data</button></div></form></div></div>
 
 <div class="modal fade" id="mimp"><div class="modal-dialog"><form method="POST" action="/import_csv" enctype="multipart/form-data" class="modal-content border-0 shadow"><div class="modal-header border-0"><h5 class="fw-bold">Import CSV</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-info small">Format CSV: <b>Nama, Jabatan, Nilai_C1, Nilai_C2...</b></div><input type="file" name="file_csv" class="form-control" required></div><div class="modal-footer border-0"><button class="btn btn-modern w-100">Upload & Proses</button></div></form></div></div>
 
 <script>
-    // FINAL CONFIG
     $(document).ready(function(){ 
         const dtConfig = {
             language: { search: "Cari:", lengthMenu: "Tampil _MENU_", info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data" },
@@ -344,13 +339,7 @@
     function modImport(){ new bootstrap.Modal('#mimp').show(); }
     function toggleAll(src,cls){ $('.'+cls).prop('checked',src.checked); chk(cls=='ck'?'bdk':'bdka',cls); }
     function chk(btn,cls){ $('.'+cls+':checked').length?$('#'+btn).removeClass('d-none'):$('#'+btn).addClass('d-none'); }
-    function submitBulk(formId, actionUrl) {
-        if(confirm('Yakin ingin menghapus data yang dipilih?')) {
-            const form = document.getElementById(formId);
-            form.action = actionUrl;
-            form.submit();
-        }
-    }
+    function submitBulk(formId, actionUrl) { if(confirm('Hapus data terpilih?')) { document.getElementById(formId).action=actionUrl; document.getElementById(formId).submit(); } }
 </script>
 <% } %>
 </body>
