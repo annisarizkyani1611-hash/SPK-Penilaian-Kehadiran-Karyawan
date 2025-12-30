@@ -29,21 +29,19 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-    key: 'session_pam_fix_final',
-    secret: 'pam_secret_key_super',
+    key: 'session_pam_ultimate',
+    secret: 'pam_secret_key_fixed',
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 86400000 }
 }));
 
-// Middleware Database
 app.use(async (req, res, next) => { req.dbPool = pool; next(); });
 
-// Wrapper Query Helper
 const query = async (sql, params = []) => {
     const conn = await pool.getConnection();
-    try { const [results] = await conn.execute(sql, params); return results; } catch(e){ console.log("SQL ERROR:", e.message); return []; } finally { conn.release(); }
+    try { const [results] = await conn.execute(sql, params); return results; } catch(e){ console.log(e); return []; } finally { conn.release(); }
 };
 
 // --- ROUTES ---
@@ -95,7 +93,7 @@ app.use('/del_kriteria', auth, async (req, res) => {
     res.redirect('/kriteria');
 });
 
-// --- PERBAIKAN LOGIKA KARYAWAN & NILAI (VERSI FINAL ANTI-BUG) ---
+// --- BAGIAN KRUSIAL YANG DIPERBAIKI ---
 app.get('/karyawan', auth, async (req, res) => {
     const krit = await query("SELECT * FROM kriteria ORDER BY kode ASC");
     const kars = await query("SELECT * FROM karyawan ORDER BY id DESC");
@@ -109,38 +107,37 @@ app.get('/karyawan', auth, async (req, res) => {
 });
 
 app.post('/save_karyawan', auth, async (req, res) => {
-    const { id, nama, jabatan, nilai } = req.body;
+    const { id, nama, jabatan } = req.body; // Perhatikan: 'nilai' tidak diambil dari destruct di sini
     let kid = id;
 
-    // 1. Simpan Data Diri
+    // 1. Simpan Karyawan
     if(!id || id === "") {
         const ret = await query("INSERT INTO karyawan (nama,jabatan) VALUES (?,?)", [nama,jabatan]);
         kid = ret.insertId;
     } else {
         await query("UPDATE karyawan SET nama=?, jabatan=? WHERE id=?", [nama,jabatan,id]);
-        // Hapus nilai lama agar bersih
+        // Bersihkan nilai lama (SAFE MODE)
         await query("DELETE FROM nilai WHERE id_karyawan=?", [kid]);
     }
 
-    // 2. Simpan Nilai (LOGIKA BARU: Loop berdasarkan Database Kriteria, bukan Input Form)
-    // Ini menjamin C1-C5 pasti tersimpan meskipun form inputnya aneh.
-    if(nilai) {
-        // Ambil semua ID kriteria dari database
-        const allKriteria = await query("SELECT id FROM kriteria");
+    // 2. Simpan Nilai (METODE BARU: SPECIFIC KEY)
+    // Ambil semua kriteria yang aktif
+    const allKriteria = await query("SELECT id FROM kriteria");
+    
+    for(let k of allKriteria) {
+        // Logika Kunci: Ambil input bernama "val_1", "val_2", dst.
+        // Ini tidak akan tertukar/bergeser karena namanya unik.
+        const inputName = 'val_' + k.id; 
+        const rawVal = req.body[inputName]; 
         
-        for(let k of allKriteria) {
-            // Ambil nilai dari form berdasarkan ID kriteria (aman untuk array maupun object)
-            let rawVal = nilai[k.id]; 
-            let v = parseFloat(rawVal);
-            
-            // Jika valid angka, simpan. Jika tidak valid/kosong, simpan 0.
-            // Ini PENTING agar C5 tidak bolong.
-            let finalVal = !isNaN(v) ? v : 0;
-            
-            await query("INSERT INTO nilai (id_karyawan, id_kriteria, nilai) VALUES (?, ?, ?)", 
-                [kid, k.id, finalVal]);
-        }
+        let v = parseFloat(rawVal);
+        // Jika kosong/NaN, paksa jadi 0
+        if(isNaN(v)) v = 0; 
+
+        await query("INSERT INTO nilai (id_karyawan, id_kriteria, nilai) VALUES (?, ?, ?)", 
+            [kid, k.id, v]);
     }
+
     res.redirect('/karyawan');
 });
 
@@ -218,4 +215,4 @@ app.all('/analisis', auth, async (req, res) => {
 });
 
 module.exports = app;
-if (require.main === module) app.listen(3000, () => console.log("Server OK"));
+if (require.main === module) app.listen(3000);
