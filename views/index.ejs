@@ -16,40 +16,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        :root { 
-            --primary: #0ea5e9; --primary-dark: #0284c7; --primary-light: #e0f2fe;
-            --dark: #0f172a; --gray: #64748b; --bg: #f8fafc; --sidebar-w: 280px; 
-        }
+        :root { --primary: #0ea5e9; --primary-dark: #0284c7; --primary-light: #e0f2fe; --dark: #0f172a; --gray: #64748b; --bg: #f8fafc; --sidebar-w: 280px; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--dark); overflow-x: hidden; }
-        
-        /* SIDEBAR */
         #sidebar { width: var(--sidebar-w); height: 100vh; position: fixed; top:0; left:0; background: #fff; border-right: 1px solid #e2e8f0; transition: 0.3s; z-index: 1000; padding-top: 25px; }
         .sidebar-brand { padding: 0 30px 30px; font-size: 1.2rem; font-weight: 800; color: var(--primary-dark); display: flex; align-items: center; gap: 12px; }
         .nav-link { padding: 12px 20px; color: var(--gray); font-weight: 600; border-radius: 12px; display: flex; align-items: center; text-decoration: none; margin-bottom: 5px; transition:0.2s; }
         .nav-link:hover, .nav-link.active { background: var(--primary-light); color: var(--primary-dark); transform: translateX(5px); }
         .nav-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; padding: 15px 20px 5px; }
-        
-        /* CONTENT */
         #content { margin-left: var(--sidebar-w); padding: 30px; transition: 0.3s; min-height: 100vh; }
-        
-        /* CARD */
         .card-modern { background: #fff; border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; overflow: hidden; }
         .card-header-modern { padding: 20px 30px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; font-weight: 700; background: #fff; font-size: 1.1rem; }
         .card-body-modern { padding: 0; }
-        
-        /* TABLE */
         .table-custom { width: 100% !important; border-collapse: separate; border-spacing: 0; margin-bottom: 0; }
         .table-custom thead th { background: #f8fafc; color: var(--gray); text-transform: uppercase; font-size: 0.75rem; padding: 18px 20px; border-bottom: 2px solid #e2e8f0; font-weight: 700; vertical-align: middle; white-space: nowrap; }
         .table-custom tbody td { padding: 16px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; color: var(--dark); font-size: 0.9rem; }
         .table-custom tbody tr:hover { background-color: #f1f5f9; }
-        
-        /* DATATABLES */
         .dataTables_wrapper { padding: 20px; }
         .dataTables_filter input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 12px; }
         .dataTables_length select { border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 30px 6px 10px; }
-        
         .login-bg { background: linear-gradient(135deg, #e0f2fe, #fff); height: 100vh; display: flex; align-items: center; justify-content: center; }
-
         @media(max-width:991px){ #sidebar{margin-left: calc(var(--sidebar-w)*-1);} #sidebar.active{margin-left:0; box-shadow: 5px 0 20px rgba(0,0,0,0.1);} #content{margin-left:0; padding: 20px;} }
         @media print { #sidebar, .no-print { display: none !important; } #content { margin: 0; padding: 0; } .card-modern { box-shadow: none; border: 1px solid #ddd; } }
     </style>
@@ -78,17 +63,12 @@
         <div class="px-3">
             <div class="nav-title">Menu Utama</div>
             <a href="/dashboard" class="nav-link <%= page=='dashboard'?'active':'' %>"><i class="fas fa-chart-pie w-25"></i> Dashboard</a>
-            
             <div class="nav-title">Master Data</div>
             <a href="/kriteria" class="nav-link <%= page=='kriteria'?'active':'' %>"><i class="fas fa-sliders w-25"></i> Data Kriteria</a>
             <a href="/karyawan" class="nav-link <%= page=='karyawan'?'active':'' %>"><i class="fas fa-users-gear w-25"></i> Data Pegawai</a>
-            
             <div class="nav-title">Laporan</div>
             <a href="/analisis" class="nav-link <%= page=='analisis'?'active':'' %>"><i class="fas fa-award w-25"></i> Hasil Penilaian</a>
-            
-            <div class="mt-5 border-top pt-3">
-                <a href="/logout" class="nav-link text-danger"><i class="fas fa-sign-out-alt w-25"></i> Keluar</a>
-            </div>
+            <div class="mt-5 border-top pt-3"><a href="/logout" class="nav-link text-danger"><i class="fas fa-sign-out-alt w-25"></i> Keluar</a></div>
         </div>
     </nav>
 
@@ -96,9 +76,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4 no-print">
             <div class="d-flex align-items-center gap-3">
                 <button class="btn btn-light d-lg-none border" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="fas fa-bars"></i></button>
-                <div>
-                    <h4 class="fw-bold m-0"><%= page=='dashboard'?'Overview':(page=='kriteria'?'Master Kriteria':(page=='karyawan'?'Data Pegawai & Nilai':'Hasil Keputusan')) %></h4>
-                </div>
+                <div><h4 class="fw-bold m-0"><%= page=='dashboard'?'Overview':(page=='kriteria'?'Master Kriteria':(page=='karyawan'?'Data Pegawai & Nilai':'Hasil Keputusan')) %></h4></div>
             </div>
             <div class="bg-white border rounded-pill px-3 py-2 d-flex align-items-center gap-3 shadow-sm">
                 <div class="text-end lh-1"><div class="fw-bold small"><%= user.nama_lengkap %></div><small class="text-muted" style="font-size:10px">Admin</small></div>
@@ -117,36 +95,13 @@
             <div class="card-modern">
                 <div class="card-header-modern"><span>Daftar Kriteria</span> <button class="btn btn-primary btn-sm rounded-3 shadow-sm" onclick="modKriteria()">+ Tambah Data</button></div>
                 <div class="card-body-modern">
-                    <form id="formKriteria" method="POST" action="/del_kriteria">
-                        <div class="table-responsive">
-                            <table class="table table-custom table-hover" id="tableData">
-                                <thead><tr>
-                                    <th class="text-center" style="width:50px">No</th>
-                                    <th>Kode</th>
-                                    <th>Nama Kriteria</th>
-                                    <th>Atribut</th>
-                                    <th class="text-center">Bobot</th>
-                                    <th class="text-end">Aksi</th>
-                                </tr></thead>
-                                <tbody><% kriteria.forEach((r,i) => { %> 
-                                    <tr>
-                                        <td class="text-center fw-bold"><%= i+1 %></td>
-                                        <td><span class="badge bg-light text-dark border"><%= r.kode %></span></td>
-                                        <td class="fw-bold"><%= r.nama %></td>
-                                        <td><span class="badge <%= r.atribut=='benefit'?'bg-success':'bg-danger'%> bg-opacity-75"><%= r.atribut.toUpperCase() %></span></td>
-                                        <td class="text-center"><%= r.bobot %></td>
-                                        <td class="text-end">
-                                            <button type="button" class="btn btn-sm btn-light border text-primary" 
-                                                data-id="<%= r.id %>" data-kode="<%= r.kode %>" data-nama="<%= r.nama %>" 
-                                                data-atribut="<%= r.atribut %>" data-bobot="<%= r.bobot %>"
-                                                onclick="modKriteria(this)"><i class="fas fa-pen"></i></button>
-                                            <a href="/del_kriteria?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus Data?')"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr> 
-                                <% }) %></tbody>
-                            </table>
-                        </div>
-                    </form>
+                    <form id="formKriteria" method="POST" action="/del_kriteria"><div class="table-responsive"><table class="table table-custom table-hover" id="tableData">
+                        <thead><tr><th class="text-center" style="width:50px">No</th><th>Kode</th><th>Nama Kriteria</th><th>Atribut</th><th class="text-center">Bobot</th><th class="text-end">Aksi</th></tr></thead>
+                        <tbody><% kriteria.forEach((r,i) => { %> 
+                            <tr><td class="text-center fw-bold"><%= i+1 %></td><td><span class="badge bg-light text-dark border"><%= r.kode %></span></td><td class="fw-bold"><%= r.nama %></td><td><span class="badge <%= r.atribut=='benefit'?'bg-success':'bg-danger'%> bg-opacity-75"><%= r.atribut.toUpperCase() %></span></td><td class="text-center"><%= r.bobot %></td>
+                            <td class="text-end"><button type="button" class="btn btn-sm btn-light border text-primary" data-id="<%= r.id %>" data-kode="<%= r.kode %>" data-nama="<%= r.nama %>" data-atribut="<%= r.atribut %>" data-bobot="<%= r.bobot %>" onclick="modKriteria(this)"><i class="fas fa-pen"></i></button> <a href="/del_kriteria?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus Data?')"><i class="fas fa-trash"></i></a></td></tr> 
+                        <% }) %></tbody>
+                    </table></div></form>
                 </div>
             </div>
 
@@ -157,142 +112,69 @@
                 <button class="btn btn-primary shadow-sm btn-sm fw-bold" onclick="modKaryawan()">+ Input Pegawai</button>
             </div>
             <div class="card-modern">
-                <div class="card-header-modern">
-                    <span>Data Pegawai & Nilai</span>
-                    <button class="btn btn-danger btn-sm d-none" id="bdka" onclick="submitBulk()">Hapus Terpilih</button>
-                </div>
+                <div class="card-header-modern"><span>Data Pegawai & Nilai</span> <button class="btn btn-danger btn-sm d-none" id="bdka" onclick="submitBulk()">Hapus Terpilih</button></div>
                 <div class="card-body-modern">
-                    <form id="formKaryawan" method="POST" action="/del_karyawan">
-                        <div class="table-responsive">
-                            <table class="table table-custom table-hover" id="tableData">
-                                <thead><tr>
-                                    <th class="text-center no-sort" style="width:10px"><input class="form-check-input" type="checkbox" onchange="toggleAll(this)"></th>
-                                    <th class="text-center" style="width:40px">No</th>
-                                    <th>Nama Pegawai</th>
-                                    <th>Jabatan</th>
-                                    <% kriteria.forEach(c=>{ %> 
-                                        <th class="text-center" style="min-width:80px">
-                                            <%= c.kode %><br>
-                                            <small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small>
-                                        </th> 
-                                    <% }) %> 
-                                    <th class="text-end no-sort">Aksi</th>
-                                </tr></thead>
-                                <tbody><% karyawan.forEach((r,i) => { %> 
-                                    <tr>
-                                        <td class="text-center"><input class="form-check-input cka" type="checkbox" name="ids[]" value="<%= r.id %>" onchange="chk()"></td>
-                                        <td class="text-center fw-bold"><%= i+1 %></td>
-                                        <td class="fw-bold"><%= r.nama %></td>
-                                        <td class="text-muted small"><%= r.jabatan %></td>
-                                        <% kriteria.forEach(c=>{ %> <td class="text-center"><%= r.vals[c.id]||0 %></td> <% }) %>
-                                        <td class="text-end">
-                                            <button type="button" class="btn btn-sm btn-light border text-primary"
-                                                data-id="<%= r.id %>" 
-                                                data-nama="<%= r.nama %>" 
-                                                data-jabatan="<%= r.jabatan %>"
-                                                data-vals='<%- JSON.stringify(r.vals) %>'
-                                                onclick="modKaryawan(this)"><i class="fas fa-pen"></i></button>
-                                            <a href="/del_karyawan?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus?')"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr> 
-                                <% }) %></tbody>
-                            </table>
-                        </div>
-                    </form>
+                    <form id="formKaryawan" method="POST" action="/del_karyawan"><div class="table-responsive"><table class="table table-custom table-hover" id="tableData">
+                        <thead><tr><th class="text-center no-sort" style="width:10px"><input class="form-check-input" type="checkbox" onchange="toggleAll(this)"></th><th class="text-center" style="width:40px">No</th><th>Nama Pegawai</th><th>Jabatan</th>
+                        <% kriteria.forEach(c=>{ %> <th class="text-center" style="min-width:80px"><%= c.kode %><br><small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small></th> <% }) %> <th class="text-end no-sort">Aksi</th></tr></thead>
+                        <tbody><% karyawan.forEach((r,i) => { %> 
+                            <tr><td class="text-center"><input class="form-check-input cka" type="checkbox" name="ids[]" value="<%= r.id %>" onchange="chk()"></td><td class="text-center fw-bold"><%= i+1 %></td><td class="fw-bold"><%= r.nama %></td><td class="text-muted small"><%= r.jabatan %></td>
+                            <% kriteria.forEach(c=>{ %> <td class="text-center"><%= r.vals[c.id]||0 %></td> <% }) %>
+                            <td class="text-end"><button type="button" class="btn btn-sm btn-light border text-primary" data-id="<%= r.id %>" data-nama="<%= r.nama %>" data-jabatan="<%= r.jabatan %>" data-vals='<%- JSON.stringify(r.vals) %>' onclick="modKaryawan(this)"><i class="fas fa-pen"></i></button> <a href="/del_karyawan?id=<%= r.id %>" class="btn btn-sm btn-light border text-danger" onclick="return confirm('Hapus?')"><i class="fas fa-trash"></i></a></td></tr> 
+                        <% }) %></tbody>
+                    </table></div></form>
                 </div>
             </div>
 
         <% } else if(page === 'analisis') { %>
             <div class="card-modern">
                 <div class="card-header-modern"><span>Hasil Perankingan SAW</span> <button onclick="window.print()" class="btn btn-sm btn-outline-secondary no-print">Print PDF</button></div>
-                <div class="card-body-modern">
-                    <div class="table-responsive">
-                        <table class="table table-custom table-striped mb-0" id="trank">
-                            <thead><tr>
-                                <th class="ps-4" style="width:60px">Rank</th>
-                                <th style="min-width:200px">Nama Pegawai</th>
-                                <% kriteria.forEach(c=>{ %> 
-                                    <th class="text-center">
-                                        <%= c.kode %><br>
-                                        <small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small>
-                                    </th> 
-                                <% }) %> 
-                                <th class="text-end pe-4 text-success">Total Nilai (V)</th>
-                            </tr></thead>
-                            <tbody><% let no=1; hasil.forEach(h => { %> 
-                                <tr>
-                                    <td class="ps-4"><div class="badge bg-primary rounded-pill"><%= no++ %></div></td>
-                                    <td><div class="fw-bold"><%= h.nama %></div><small class="text-muted"><%= h.jabatan %></small></td>
-                                    <% kriteria.forEach(c=>{ %> <td class="text-center text-muted"><%= h.detail[c.kode] %></td> <% }) %>
-                                    <td class="text-end pe-4 fw-bold text-success fs-5"><%= h.nilai.toFixed(4) %></td>
-                                </tr> 
-                            <% }) %></tbody>
-                        </table>
-                    </div>
-                </div>
+                <div class="card-body-modern"><div class="table-responsive"><table class="table table-custom table-striped mb-0" id="trank">
+                    <thead><tr><th class="ps-4" style="width:60px">Rank</th><th style="min-width:200px">Nama Pegawai</th><% kriteria.forEach(c=>{ %> <th class="text-center"><%= c.kode %><br><small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small></th> <% }) %> <th class="text-end pe-4 text-success">Total Nilai (V)</th></tr></thead>
+                    <tbody><% let no=1; hasil.forEach(h => { %> 
+                        <tr><td class="ps-4"><div class="badge bg-primary rounded-pill"><%= no++ %></div></td><td><div class="fw-bold"><%= h.nama %></div><small class="text-muted"><%= h.jabatan %></small></td><% kriteria.forEach(c=>{ %> <td class="text-center text-muted"><%= h.detail[c.kode] %></td> <% }) %><td class="text-end pe-4 fw-bold text-success fs-5"><%= h.nilai.toFixed(4) %></td></tr> 
+                    <% }) %></tbody>
+                </table></div></div>
             </div>
-            
-            <div class="card-modern no-print">
-                <div class="card-header-modern"><span>Grafik 10 Terbaik</span></div>
-                <div class="p-5 d-flex justify-content-center">
-                    <div style="width:400px; max-width:100%"><canvas id="myChart"></canvas></div>
-                </div>
-            </div>
+            <div class="card-modern no-print"><div class="card-header-modern"><span>Grafik 10 Terbaik</span></div><div class="p-5 d-flex justify-content-center"><div style="width:400px; max-width:100%"><canvas id="myChart"></canvas></div></div></div>
             <script>
                 new Chart(document.getElementById('myChart'), { type: 'pie', data: { labels: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nama)) %>, datasets: [{ data: <%- JSON.stringify(hasil.slice(0,10).map(h=>h.nilai)) %>, backgroundColor: ['#0ea5e9','#38bdf8','#7dd3fc','#0284c7','#0369a1'] }] }, options: {plugins:{legend:{position:'bottom'}}} });
-                $(document).ready(function(){ 
-                    $('#trank').DataTable({ language: { search: "Cari Ranking:", lengthMenu: "Tampil _MENU_" } }); 
-                });
+                $(document).ready(function(){ $('#trank').DataTable({ language: { search: "Cari Ranking:", lengthMenu: "Tampil _MENU_" } }); });
             </script>
         <% } %>
     </div>
 </div>
 
 <div class="modal fade" id="mimp"><div class="modal-dialog"><form method="POST" action="/import_csv" enctype="multipart/form-data" class="modal-content border-0 shadow"><div class="modal-header border-0"><h5 class="fw-bold">Import CSV</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="file" name="file_csv" class="form-control" required></div><div class="modal-footer border-0"><button class="btn btn-primary w-100">Upload</button></div></form></div></div>
-
 <div class="modal fade" id="mk"><div class="modal-dialog"><form method="POST" action="/save_kriteria" class="modal-content border-0 shadow" id="fk"><div class="modal-header border-0"><h5 class="fw-bold">Form Kriteria</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="kid"><div class="mb-3"><label class="small fw-bold">Kode</label><input name="kode" id="kk" class="form-control" required></div><div class="mb-3"><label class="small fw-bold">Nama</label><input name="nama" id="kn" class="form-control" required></div><div class="row"><div class="col-6"><label class="small fw-bold">Atribut</label><select name="atribut" id="ka" class="form-control"><option value="benefit">Benefit</option><option value="cost">Cost</option></select></div><div class="col-6"><label class="small fw-bold">Bobot</label><input type="number" step="0.1" name="bobot" id="kb" class="form-control" required></div></div></div><div class="modal-footer border-0"><button class="btn btn-primary w-100">Simpan</button></div></form></div></div>
 
-<div class="modal fade" id="mka"><div class="modal-dialog"><form method="POST" action="/save_karyawan" class="modal-content border-0 shadow" id="fkar"><div class="modal-header border-0"><h5 class="fw-bold">Form Pegawai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="karid"><div class="mb-3"><label class="small fw-bold">Nama Lengkap</label><input name="nama" id="karn" class="form-control" required></div><div class="mb-4"><label class="small fw-bold">Jabatan</label><input name="jabatan" id="karj" class="form-control" required></div><div class="bg-light p-3 rounded"><h6 class="small fw-bold text-muted mb-3">NILAI PENILAIAN</h6><div class="row g-2"><% if(typeof kriteria!=='undefined'){ kriteria.forEach(c=>{ %> <div class="col-6"><label class="small fw-bold mb-1"><%= c.kode %> - <%= c.nama %></label><input type="number" step="0.01" name="nilai[<%= c.id %>]" id="val_<%= c.id %>" class="form-control form-control-sm" required></div> <% })} %></div></div></div><div class="modal-footer border-0"><button class="btn btn-primary w-100">Simpan Data</button></div></form></div></div>
+<div class="modal fade" id="mka"><div class="modal-dialog"><form method="POST" action="/save_karyawan" class="modal-content border-0 shadow" id="fkar"><div class="modal-header border-0"><h5 class="fw-bold">Form Pegawai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="karid"><div class="mb-3"><label class="small fw-bold">Nama Lengkap</label><input name="nama" id="karn" class="form-control" required></div><div class="mb-4"><label class="small fw-bold">Jabatan</label><input name="jabatan" id="karj" class="form-control" required></div><div class="bg-light p-3 rounded"><h6 class="small fw-bold text-muted mb-3">NILAI PENILAIAN</h6><div class="row g-2">
+    <% if(typeof kriteria!=='undefined'){ kriteria.forEach(c=>{ %> 
+        <div class="col-6">
+            <label class="small fw-bold mb-1"><%= c.kode %> - <%= c.nama %></label>
+            <input type="number" step="0.01" name="val_<%= c.id %>" id="val_<%= c.id %>" class="form-control form-control-sm" required>
+        </div> 
+    <% })} %>
+</div></div></div><div class="modal-footer border-0"><button class="btn btn-primary w-100">Simpan Data</button></div></form></div></div>
 
 <script>
-    // INIT DATATABLES (FITUR PENCARIAN & SORTING DIHIDUPKAN LAGI)
     $(document).ready(function(){ 
-        const dtConfig = { 
-            language: { search: "Cari Data:", lengthMenu: "Tampil _MENU_ baris", info: "Menampilkan _START_ - _END_ dari _TOTAL_ data" },
-            columnDefs: [ { orderable: false, targets: 0 } ]
-        };
+        const dtConfig = { language: { search: "Cari Data:", lengthMenu: "Tampil _MENU_ baris", info: "Menampilkan _START_ - _END_ dari _TOTAL_ data" }, columnDefs: [ { orderable: false, targets: 0 } ] };
         $('#tableData').DataTable(dtConfig); 
     });
-
-    // LOGIKA MODAL KRITERIA
     function modKriteria(btn=null){ 
-        document.getElementById('fk').reset();
-        $('#kid').val('');
-        if(btn) {
-            const d = $(btn).data();
-            $('#kid').val(d.id); $('#kk').val(d.kode); $('#kn').val(d.nama); $('#ka').val(d.atribut); $('#kb').val(d.bobot); 
-        }
+        document.getElementById('fk').reset(); $('#kid').val('');
+        if(btn) { const d=$(btn).data(); $('#kid').val(d.id); $('#kk').val(d.kode); $('#kn').val(d.nama); $('#ka').val(d.atribut); $('#kb').val(d.bobot); }
         new bootstrap.Modal('#mk').show(); 
     }
-
-    // LOGIKA MODAL KARYAWAN
     function modKaryawan(btn=null){ 
-        document.getElementById('fkar').reset(); 
-        $('#karid').val(''); 
+        document.getElementById('fkar').reset(); $('#karid').val(''); 
         if(btn) {
-            const d = $(btn).data();
-            $('#karid').val(d.id); 
-            $('#karn').val(d.nama); 
-            $('#karj').val(d.jabatan); 
-            if(d.vals) {
-                for(let[k,v] of Object.entries(d.vals)) {
-                    $('#val_'+k).val(v);
-                }
-            }
+            const d = $(btn).data(); $('#karid').val(d.id); $('#karn').val(d.nama); $('#karj').val(d.jabatan); 
+            if(d.vals) { for(let[k,v] of Object.entries(d.vals)) { $('#val_'+k).val(v); } }
         }
         new bootstrap.Modal('#mka').show(); 
     }
-
     function modImport(){ new bootstrap.Modal('#mimp').show(); }
     function toggleAll(src){ $('.cka').prop('checked',src.checked); chk(); }
     function chk(){ $('.cka:checked').length?$('#bdka').removeClass('d-none'):$('#bdka').addClass('d-none'); }
