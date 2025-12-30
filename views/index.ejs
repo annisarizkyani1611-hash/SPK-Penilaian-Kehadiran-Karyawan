@@ -28,22 +28,35 @@
         .nav-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; padding: 15px 20px 5px; }
         #content { margin-left: var(--sidebar-w); padding: 30px; transition: 0.3s; min-height: 100vh; }
         
-        /* CARDS & TABLES */
+        /* CARD MODERN */
         .card-modern { background: #fff; border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; overflow: hidden; }
         .card-header-modern { padding: 20px 30px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; font-weight: 700; background: #fff; font-size: 1.1rem; }
+        .card-body-modern { padding: 0; } /* Padding ditangani oleh DataTables Wrapper */
+        
+        /* TABLE STYLING */
         .table-custom thead th { background: #f8fafc; color: var(--gray); text-transform: uppercase; font-size: 0.75rem; padding: 18px 20px; border-bottom: 2px solid #e2e8f0; font-weight: 700; white-space: nowrap; vertical-align: middle; }
         .table-custom tbody td { padding: 16px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; color: var(--dark); font-size: 0.9rem; }
         
+        /* PERBAIKAN LAYOUT DATATABLES (BIAR GAK MEPET) */
+        .dataTables_wrapper { padding: 25px 30px; } /* Memberi jarak nafas */
+        .dataTables_filter input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 15px; margin-left: 10px; }
+        .dataTables_length select { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 35px 8px 15px; margin: 0 10px; }
+        .dataTables_info { padding-top: 20px !important; color: var(--gray) !important; font-size: 0.9rem; }
+        .dataTables_paginate { padding-top: 15px !important; }
+        .page-item.active .page-link { background-color: var(--primary); border-color: var(--primary); }
+        .page-link { color: var(--primary); border-radius: 5px; margin: 0 3px; border: 1px solid #e2e8f0; }
+        .page-link:hover { background-color: var(--primary-light); color: var(--primary-dark); }
+
         /* RANKING MEDALS */
-        .medal-icon { font-size: 1.5rem; margin-right: 5px; vertical-align: middle; }
-        .rank-gold { color: #fbbf24; text-shadow: 0 2px 4px rgba(251, 191, 36, 0.4); }
-        .rank-silver { color: #94a3b8; text-shadow: 0 2px 4px rgba(148, 163, 184, 0.4); }
-        .rank-bronze { color: #b45309; text-shadow: 0 2px 4px rgba(180, 83, 9, 0.4); }
+        .medal-icon { font-size: 1.4rem; margin-right: 8px; vertical-align: middle; }
+        .rank-gold { color: #fbbf24; filter: drop-shadow(0 2px 2px rgba(251, 191, 36, 0.3)); }
+        .rank-silver { color: #94a3b8; filter: drop-shadow(0 2px 2px rgba(148, 163, 184, 0.3)); }
+        .rank-bronze { color: #b45309; filter: drop-shadow(0 2px 2px rgba(180, 83, 9, 0.3)); }
 
         .login-bg { background: linear-gradient(135deg, #e0f2fe, #fff); height: 100vh; display: flex; align-items: center; justify-content: center; }
         
-        @media(max-width:991px){ #sidebar{margin-left: calc(var(--sidebar-w)*-1);} #sidebar.active{margin-left:0; box-shadow: 5px 0 20px rgba(0,0,0,0.1);} #content{margin-left:0; padding: 20px;} }
-        @media print { #sidebar, .no-print { display: none !important; } #content { margin: 0; padding: 0; } .card-modern { box-shadow: none; border: 1px solid #ddd; } }
+        @media(max-width:991px){ #sidebar{margin-left: calc(var(--sidebar-w)*-1);} #sidebar.active{margin-left:0; box-shadow: 5px 0 20px rgba(0,0,0,0.1);} #content{margin-left:0; padding: 20px;} .dataTables_wrapper { padding: 15px; } }
+        @media print { #sidebar, .no-print { display: none !important; } #content { margin: 0; padding: 0; } .card-modern { box-shadow: none; border: 1px solid #ddd; } .dataTables_wrapper { padding: 0; } }
     </style>
 </head>
 <body>
@@ -122,15 +135,12 @@
 
         <% } else if(page === 'karyawan') { %>
             <div class="d-flex justify-content-end gap-2 mb-4 no-print">
-                <button class="btn btn-white border shadow-sm btn-sm" onclick="modImport()" title="Upload data dari Excel/CSV"><i class="fas fa-file-csv me-1"></i> Import CSV</button>
-                <a href="/export_csv" class="btn btn-white border shadow-sm btn-sm" title="Download data ke Excel/CSV"><i class="fas fa-download me-1"></i> Export CSV</a>
-                <button class="btn btn-primary shadow-sm btn-sm fw-bold" onclick="modKaryawan()" title="Tambah pegawai baru secara manual">+ Input Pegawai</button>
+                <button class="btn btn-white border shadow-sm btn-sm" onclick="modImport()"><i class="fas fa-file-csv me-1"></i> Import CSV</button>
+                <a href="/export_csv" class="btn btn-white border shadow-sm btn-sm"><i class="fas fa-download me-1"></i> Export CSV</a>
+                <button class="btn btn-primary shadow-sm btn-sm fw-bold" onclick="modKaryawan()">+ Input Pegawai</button>
             </div>
             <div class="card-modern">
-                <div class="card-header-modern">
-                    <span>Data Pegawai & Nilai</span>
-                    <button class="btn btn-danger btn-sm d-none" id="bdka" onclick="submitBulk()">Hapus Terpilih</button>
-                </div>
+                <div class="card-header-modern"><span>Data Pegawai & Nilai</span> <button class="btn btn-danger btn-sm d-none" id="bdka" onclick="submitBulk()">Hapus Terpilih</button></div>
                 <div class="card-body-modern">
                     <form id="formKaryawan" method="POST" action="/del_karyawan"><div class="table-responsive"><table class="table table-custom table-hover" id="tableData">
                         <thead><tr><th class="text-center no-sort" style="width:10px"><input class="form-check-input" type="checkbox" onchange="toggleAll(this)"></th><th class="text-center" style="width:40px">No</th><th>Nama Pegawai</th><th>Jabatan</th>
@@ -148,21 +158,20 @@
             <div class="card-modern">
                 <div class="card-header-modern"><span>Hasil Perankingan SAW</span> <button onclick="window.print()" class="btn btn-sm btn-outline-secondary no-print">Print PDF</button></div>
                 <div class="card-body-modern"><div class="table-responsive"><table class="table table-custom table-striped mb-0" id="trank">
-                    <thead><tr><th class="ps-4" style="width:60px">Rank</th><th style="min-width:200px">Nama Pegawai</th><% kriteria.forEach(c=>{ %> <th class="text-center"><%= c.kode %><br><small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small></th> <% }) %> <th class="text-end pe-4 text-success">Total Nilai (V)</th></tr></thead>
+                    <thead><tr><th class="ps-4" style="width:120px">Rank</th><th style="min-width:200px">Nama Pegawai</th><% kriteria.forEach(c=>{ %> <th class="text-center"><%= c.kode %><br><small class="text-muted fw-normal" style="font-size:0.65rem"><%= c.nama %></small></th> <% }) %> <th class="text-end pe-4 text-success">Total Nilai (V)</th></tr></thead>
                     <tbody><% let no=1; hasil.forEach(h => { 
-                        // LOGIKA MEDALI EMAS, PERAK, PERUNGGU
                         let medal = '';
-                        let badgeClass = 'bg-light text-muted border';
-                        if(no === 1) { medal='<i class="fas fa-medal medal-icon rank-gold"></i>'; badgeClass='bg-warning bg-opacity-10 text-warning border border-warning'; }
-                        else if(no === 2) { medal='<i class="fas fa-medal medal-icon rank-silver"></i>'; badgeClass='bg-secondary bg-opacity-10 text-secondary border border-secondary'; }
-                        else if(no === 3) { medal='<i class="fas fa-medal medal-icon rank-bronze"></i>'; badgeClass='bg-danger bg-opacity-10 text-danger border border-danger'; }
+                        // Ikon Piala untuk Juara 1, 2, 3
+                        if(no === 1) medal='<i class="fas fa-trophy medal-icon rank-gold"></i>'; 
+                        else if(no === 2) medal='<i class="fas fa-medal medal-icon rank-silver"></i>'; 
+                        else if(no === 3) medal='<i class="fas fa-medal medal-icon rank-bronze"></i>'; 
                     %> 
                         <tr>
-                            <td class="ps-4">
+                            <td class="ps-4" data-order="<%= no %>">
                                 <% if(no <= 3) { %> 
-                                    <%- medal %> <span class="fw-bold small">#<%= no++ %></span>
+                                    <%- medal %> <span class="fw-bold text-dark">#<%= no++ %></span>
                                 <% } else { %>
-                                    <span class="badge bg-light text-muted border rounded-pill">#<%= no++ %></span>
+                                    <span class="badge bg-light text-muted border rounded-pill ms-2">#<%= no++ %></span>
                                 <% } %>
                             </td>
                             <td><div class="fw-bold"><%= h.nama %></div><small class="text-muted"><%= h.jabatan %></small></td>
@@ -186,24 +195,12 @@
     <div class="modal-body">
         <div class="alert alert-info small">
             <h6 class="fw-bold"><i class="fas fa-info-circle me-1"></i> Panduan Format CSV:</h6>
-            <ol class="mb-2 ps-3">
-                <li>Baris pertama harus Header (Nama, Jabatan, C1, C2...)</li>
-                <li>Gunakan koma (,) sebagai pemisah kolom.</li>
-                <li>Urutan kolom harus: <b>Nama, Jabatan, Nilai C1, Nilai C2, dst.</b></li>
-            </ol>
+            <ol class="mb-2 ps-3"><li>Baris pertama Header.</li><li>Pemisah koma (,).</li><li>Urutan: <b>Nama, Jabatan, Nilai C1, Nilai C2...</b></li></ol>
             <button type="button" class="btn btn-xs btn-outline-primary mt-1" onclick="downloadTemplate()"><i class="fas fa-download me-1"></i> Download Template</button>
         </div>
-        <div class="mb-3">
-            <label class="fw-bold small mb-1">Pilih File (.csv)</label>
-            <input type="file" name="file_csv" class="form-control" accept=".csv" required>
-        </div>
+        <div class="mb-3"><label class="fw-bold small mb-1">Pilih File</label><input type="file" name="file_csv" class="form-control" accept=".csv" required></div>
     </div>
-    <div class="modal-footer border-0">
-        <button class="btn btn-primary w-100 btn-submit">
-            <span class="btn-text">Upload & Proses</span>
-            <span class="btn-loader d-none"><i class="fas fa-circle-notch fa-spin me-2"></i>Memproses...</span>
-        </button>
-    </div>
+    <div class="modal-footer border-0"><button class="btn btn-primary w-100 btn-submit"><span class="btn-text">Upload & Proses</span><span class="btn-loader d-none"><i class="fas fa-circle-notch fa-spin me-2"></i>Memproses...</span></button></div>
 </form></div></div>
 
 <div class="modal fade" id="mk"><div class="modal-dialog"><form method="POST" action="/save_kriteria" class="modal-content border-0 shadow form-loading" id="fk"><div class="modal-header border-0"><h5 class="fw-bold">Form Kriteria</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="id" id="kid"><div class="mb-3"><label class="small fw-bold">Kode</label><input name="kode" id="kk" class="form-control" required></div><div class="mb-3"><label class="small fw-bold">Nama</label><input name="nama" id="kn" class="form-control" required></div><div class="row"><div class="col-6"><label class="small fw-bold">Atribut</label><select name="atribut" id="ka" class="form-control"><option value="benefit">Benefit</option><option value="cost">Cost</option></select></div><div class="col-6"><label class="small fw-bold">Bobot</label><input type="number" step="0.1" name="bobot" id="kb" class="form-control" required></div></div></div><div class="modal-footer border-0"><button class="btn btn-primary w-100 btn-submit"><span class="btn-text">Simpan</span><span class="btn-loader d-none"><i class="fas fa-circle-notch fa-spin me-2"></i>Menyimpan...</span></button></div></form></div></div>
@@ -212,36 +209,23 @@
 
 <script>
     $(document).ready(function(){ 
-        // DataTables
         const dtConfig = { language: { search: "Cari Data:", lengthMenu: "Tampil _MENU_ baris", info: "Menampilkan _START_ - _END_ dari _TOTAL_ data" }, columnDefs: [ { orderable: false, targets: 0 } ] };
         $('#tableData').DataTable(dtConfig);
 
-        // LOADING STATE SYSTEM (Anti-Double Click)
         $('.form-loading').on('submit', function() {
             const btn = $(this).find('.btn-submit');
-            btn.prop('disabled', true); // Matikan tombol
-            btn.find('.btn-text').addClass('d-none'); // Sembunyikan teks
-            btn.find('.btn-loader').removeClass('d-none'); // Munculkan loader
+            btn.prop('disabled', true); btn.find('.btn-text').addClass('d-none'); btn.find('.btn-loader').removeClass('d-none');
         });
     });
 
-    // GENERATE TEMPLATE CSV OTOMATIS (Client Side)
     function downloadTemplate() {
-        // Header
         let csvContent = "data:text/csv;charset=utf-8,";
         let header = ["Nama Lengkap", "Jabatan"];
-        
-        // Ambil nama kriteria dari tabel (biar dinamis)
-        // Kita inject variable EJS ke JS Client side
         const krits = <%- JSON.stringify(typeof kriteria!=='undefined'?kriteria:[]) %>;
-        krits.forEach(k => header.push(`Nilai ${k.kode}`)); // C1, C2...
-        
+        krits.forEach(k => header.push(`Nilai ${k.kode}`)); 
         csvContent += header.join(",") + "\r\n";
-        // Contoh Data
         let sample = ["Contoh Nama", "Staff", ...krits.map(()=>"0")];
         csvContent += sample.join(",");
-
-        // Download Trigger
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -250,19 +234,8 @@
         link.click();
     }
 
-    function modKriteria(btn=null){ 
-        document.getElementById('fk').reset(); $('#kid').val('');
-        if(btn) { const d=$(btn).data(); $('#kid').val(d.id); $('#kk').val(d.kode); $('#kn').val(d.nama); $('#ka').val(d.atribut); $('#kb').val(d.bobot); }
-        new bootstrap.Modal('#mk').show(); 
-    }
-    function modKaryawan(btn=null){ 
-        document.getElementById('fkar').reset(); $('#karid').val(''); 
-        if(btn) {
-            const d = $(btn).data(); $('#karid').val(d.id); $('#karn').val(d.nama); $('#karj').val(d.jabatan); 
-            if(d.vals) { for(let[k,v] of Object.entries(d.vals)) { $('#val_'+k).val(v); } }
-        }
-        new bootstrap.Modal('#mka').show(); 
-    }
+    function modKriteria(btn=null){ document.getElementById('fk').reset(); $('#kid').val(''); if(btn) { const d=$(btn).data(); $('#kid').val(d.id); $('#kk').val(d.kode); $('#kn').val(d.nama); $('#ka').val(d.atribut); $('#kb').val(d.bobot); } new bootstrap.Modal('#mk').show(); }
+    function modKaryawan(btn=null){ document.getElementById('fkar').reset(); $('#karid').val(''); if(btn) { const d=$(btn).data(); $('#karid').val(d.id); $('#karn').val(d.nama); $('#karj').val(d.jabatan); if(d.vals) { for(let[k,v] of Object.entries(d.vals)) { $('#val_'+k).val(v); } } } new bootstrap.Modal('#mka').show(); }
     function modImport(){ new bootstrap.Modal('#mimp').show(); }
     function toggleAll(src){ $('.cka').prop('checked',src.checked); chk(); }
     function chk(){ $('.cka:checked').length?$('#bdka').removeClass('d-none'):$('#bdka').addClass('d-none'); }
